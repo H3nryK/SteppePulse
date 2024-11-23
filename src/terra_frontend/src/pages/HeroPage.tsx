@@ -123,7 +123,7 @@ const HeroPage: React.FC = () => {
       </div>
 
       {/* Features Section */}
-      <div className="relative z-10 min-h-[75vh] flex items-center justify-center bg-black/60">
+      <div className="relative z-10 min-h-[75vh] flex items-center justify-center">
         <motion.div
           variants={containerVariants}
           initial="hidden"

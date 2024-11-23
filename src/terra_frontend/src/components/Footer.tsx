@@ -18,7 +18,7 @@ const Footer: React.FC = () => {
               className="flex items-center mb-4"
             >
               <TerraPulseLogo size={40} className="mr-2" />
-              <span className="text-2xl font-bold text-white">TerraPulse</span>
+              <span className="text-2xl font-bold text-white">SteppePulse</span>
             </motion.div>
             <p className="text-gray-400 mb-4">
               Connecting the World to Conservation through innovative blockchain technology
@@ -58,7 +58,7 @@ const Footer: React.FC = () => {
         <div className="mt-12 pt-8 border-t border-gray-600">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              © 2024 TerraPulse. All rights reserved.
+              © 2024 SteppePulse. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <motion.a
