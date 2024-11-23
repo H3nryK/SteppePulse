@@ -12,8 +12,6 @@ import { motion } from 'framer-motion';
 import Example from './components/Example';
 import Categories from './pages/Categories';
 
-
-
 // Loading animation component
 const LoadingScreen = () => (
   <motion.div
@@ -67,8 +65,6 @@ const App: React.FC = () => {
                     <Route path="/contact" element={<ContactPage />} />
                     <Route path='/explore' element={<Example />} />
                     <Route path="/category" element={<Categories />} />
-                    
-                   
                   </Routes>
                 </AnimatePresence>
               </main>
