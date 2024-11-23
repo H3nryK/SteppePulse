@@ -1,8 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Leaf, Wallet, TreePine, ExternalLink } from 'lucide-react';
 
 const CTASection = () => {
+  const bgImages = [
+    "url('/images/bg-7.jpg')",
+    "url('/images/bg-8.jpg')",
+    "url('/images/bg-6.jpg')",
+    "url('/images/bg-5.avif')",
+    "url('/images/bg-5.avif')"
+  ];
+
+  const [currentBgIndex, setCurrentBgIndex] = useState(0);
+
+  // Change background image every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentBgIndex((prevIndex) => (prevIndex + 1) % bgImages.length);
+    }, 5000); // Change image every 5 seconds
+
+    return () => clearInterval(interval); // Cleanup interval on unmount
+  }, [bgImages.length]);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -27,7 +46,19 @@ const CTASection = () => {
   };
 
   return (
-    <section className="relative overflow-hidden py-24">
+    <section
+      className="relative h-screen overflow-hidden py-24"
+      style={{
+        backgroundImage: bgImages[currentBgIndex],
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        height: '100vh',
+        width: '100vw',
+        transition: 'background-image 1s ease-in-out'
+        
+      }}
+    >
       {/* Animated background elements */}
       <div className="absolute inset-0">
         {[...Array(2)].map((_, i) => (

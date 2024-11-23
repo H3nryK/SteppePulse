@@ -6,7 +6,7 @@ import { pulseHover } from '../utils/animations';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-gradient-to-r from-emerald-800 to-teal-900 text-white">
+    <footer className="bg-gradient-to-r from-[#001f3f] to-[#001a2d] text-white">
       <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Mission */}
@@ -18,9 +18,9 @@ const Footer: React.FC = () => {
               className="flex items-center mb-4"
             >
               <TerraPulseLogo size={40} className="mr-2" />
-              <span className="text-2xl font-bold">TerraPulse</span>
+              <span className="text-2xl font-bold text-white">TerraPulse</span>
             </motion.div>
-            <p className="text-gray-300 mb-4">
+            <p className="text-gray-400 mb-4">
               Connecting the World to Conservation through innovative blockchain technology
               and gamified experiences.
             </p>
@@ -34,9 +34,12 @@ const Footer: React.FC = () => {
                 <motion.li
                   key={item}
                   whileHover={{ x: 5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
+                  transition={{ type: 'spring', stiffness: 300 }}
                 >
-                  <a href={`/${item.toLowerCase().replace(' ', '-')}`} className="text-gray-300 hover:text-white">
+                  <a
+                    href={`/${item.toLowerCase().replace(' ', '-')}`}
+                    className="text-gray-300 hover:text-white transition-colors"
+                  >
                     {item}
                   </a>
                 </motion.li>
@@ -52,7 +55,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-gray-700">
+        <div className="mt-12 pt-8 border-t border-gray-600">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
               © 2024 TerraPulse. All rights reserved.
@@ -61,14 +64,14 @@ const Footer: React.FC = () => {
               <motion.a
                 whileHover={{ y: -2 }}
                 href="/privacy"
-                className="text-gray-400 hover:text-white text-sm"
+                className="text-gray-300 hover:text-white text-sm transition-colors"
               >
                 Privacy Policy
               </motion.a>
               <motion.a
                 whileHover={{ y: -2 }}
                 href="/terms"
-                className="text-gray-400 hover:text-white text-sm"
+                className="text-gray-300 hover:text-white text-sm transition-colors"
               >
                 Terms of Service
               </motion.a>
