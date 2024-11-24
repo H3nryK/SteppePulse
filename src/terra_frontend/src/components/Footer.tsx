@@ -6,7 +6,7 @@ import { pulseHover } from '../utils/animations';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-gradient-to-r from-[#001f3f] to-[#001a2d] text-white">
+    <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Mission */}
