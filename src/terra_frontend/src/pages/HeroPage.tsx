@@ -3,34 +3,12 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 import CTASection from '../components/CTA';
 import { Leaf, Globe } from 'lucide-react';
+import currentBg from '/videos/bg.mp4';
 
 const HeroPage: React.FC = () => {
   const { scrollY } = useScroll();
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
   const scale = useTransform(scrollY, [0, 300], [1, 0.8]);
-
-  const heroVideos = React.useMemo(
-    () => [
-      `${process.env.PUBLIC_URL}/videos/bg.mp4`,
-      `${process.env.PUBLIC_URL}/videos/bg.mp4`,
-      `${process.env.PUBLIC_URL}/videos/bg.mp4`,
-    ],
-    []
-  );
-
-  const [currentBg, setCurrentBg] = React.useState<string>(heroVideos[0]);
-
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentBg((prevBg) => {
-        const currentIndex = heroVideos.indexOf(prevBg);
-        const nextIndex = (currentIndex + 1) % heroVideos.length;
-        return heroVideos[nextIndex];
-      });
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [heroVideos]);
 
   const features = [
     { icon: Leaf, title: 'Conservation', text: 'Support wildlife through NFTs', color: 'from-green-400 to-green-600' },
@@ -68,7 +46,7 @@ const HeroPage: React.FC = () => {
       {/* TerraPulse Section */}
       <div className="relative min-h-screen flex items-center justify-center bg-cover bg-center transition-all duration-1000">
         <video
-          className="absolute inset-0 w-full h-full object-cover opacity-50"
+          className="absolute inset-0 w-full h-full object-cover"
           autoPlay
           loop
           muted
@@ -93,7 +71,7 @@ const HeroPage: React.FC = () => {
               </motion.h1>
               <motion.p
                 variants={itemVariants}
-                className="text-2xl md:text-3xl text-gray-700 mb-8 leading-relaxed"
+                className="text-2xl md:text-3xl text-white mb-8 leading-relaxed"
               >
                 Connecting the World to Conservation Through Digital Innovation
               </motion.p>
@@ -112,6 +90,7 @@ const HeroPage: React.FC = () => {
                 <motion.button
                   whileHover={{ scale: 1.05, backgroundColor: '#f0fdf4' }}
                   whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate('/about')}
                   className="bg-white/80 backdrop-blur-sm border-2 border-green-600 text-green-600 px-10 py-4 rounded-full text-lg font-semibold flex items-center shadow-lg hover:shadow-xl transition-shadow"
                 >
                   <Globe className="mr-2" /> Learn More

@@ -11,10 +11,10 @@ import {
   Award,
   Camera
 } from 'lucide-react';
-import Bree from '../../public/team/bree.jpg';
-import Mirriam from '../../public/team/mirriam.jpg';
-import Henry from "../../public/team/DSC09687-2.jpg";
-import Elephant from "../../public/images/bg-8.jpg";
+import Bree from '/team/bree.jpg';
+import Mirriam from '/team/mirriam.jpg';
+import Henry from "/team/DSC09687-2.jpg";
+import Elephant from "/images/bg-8.jpg";
 
 const AboutPage = () => {
   const teamMembers = [
