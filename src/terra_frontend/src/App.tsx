@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import Navigation from './components/Header';
+import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import HeroPage from './pages/HeroPage';
 import NFTTokensPage from './pages/NFTTokensPage';

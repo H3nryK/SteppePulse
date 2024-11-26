@@ -3,7 +3,7 @@ import { X, LogIn, AlertCircle } from 'lucide-react';
 import { AuthClient } from '@dfinity/auth-client';
 import { HttpAgent } from '@dfinity/agent';
 
-const WalletConnectionModal = ({ isOpen, onClose, onConnect }) => {
+export default function WalletConnectionModal = ({ isOpen, onClose, onConnect }) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState('');
 
@@ -111,5 +111,3 @@ const WalletConnectionModal = ({ isOpen, onClose, onConnect }) => {
     </div>
   );
 };
-
-export default WalletConnectionModal;
