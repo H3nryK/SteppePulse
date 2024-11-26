@@ -8,7 +8,6 @@ import NFTTokensPage from './pages/NFTTokensPage';
 import MarketplacePage from './pages/MarketPlacePage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
-import { motion } from 'framer-motion';
 import Example from './components/Example';
 import Categories from './pages/Categories';
 import Preloader from './components/Preloader';

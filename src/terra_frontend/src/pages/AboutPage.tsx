@@ -13,10 +13,6 @@ import {
   Play,
   Pause
 } from 'lucide-react';
-import Bree from '../../public/team/bree.jpg';
-import Mirriam from '../../public/team/mirriam.jpg';
-import Henry from "../../public/team/DSC09687-2.jpg";
-import Elephant from "../../public/images/bg-8.jpg";
 
 const AboutPage = () => {
   const [activeVideo, setActiveVideo] = useState(null);
@@ -25,7 +21,7 @@ const AboutPage = () => {
     {
       name: 'Henry Kimani',
       role: 'CEO & co-founder',
-      image: Henry,
+      image: '/team/DSC09687-2.jpg',
       description: 'Software Engineer.',
       bio: 'A visionary leader with a passion for technology and conservation.',
       video: null  // Add video URL if available
@@ -33,7 +29,7 @@ const AboutPage = () => {
     {
       name: 'Bridgit Nyambeka',
       role: 'Project Manager & co-founder',
-      image: Bree,
+      image: '/team/bree.jpg',
       description: 'Software Engineer & Graphic Designer',
       bio: 'Bridging technology and creative design to drive meaningful change.',
       video: null
@@ -41,7 +37,7 @@ const AboutPage = () => {
     {
       name: 'Mirriam Njeri',
       role: 'Marketing, Community lead & co-founder',
-      image: Mirriam,
+      image: '/team/mirriam.jpg',
       description: 'Journalist & software developer.',
       bio: 'Amplifying conservation stories through innovative digital platforms.',
       video: null
@@ -49,7 +45,7 @@ const AboutPage = () => {
     {
       name: 'Brandistone Nyambonyi',
       role: 'CTO & co-founder',
-      image: Bree,
+      image: '/team/brandy.jpg',
       description: 'Software Developer',
       bio: 'Technical architect driving blockchain solutions for environmental impact.',
       video: null
@@ -99,12 +95,7 @@ const AboutPage = () => {
 
   const [heroRef, heroInView] = createInViewHook();
   const [statsRef, statsInView] = createInViewHook();
-  const [valuesRef, valuesInView] = createInViewHook();
   const [teamRef, teamInView] = createInViewHook();
-
-  const toggleVideoPlay = (index) => {
-    setActiveVideo(activeVideo === index ? null : index);
-  };
 
   return (
     <motion.div
@@ -127,7 +118,7 @@ const AboutPage = () => {
           transition={{ duration: 1.5 }}
         >
           <motion.img
-            src={Elephant}
+            src="/images/bg-8.jpg"
             alt="Wildlife Conservation"
             className="w-full h-full object-cover opacity-30"
           />
@@ -218,15 +209,6 @@ const AboutPage = () => {
                   alt={member.name}
                   className="w-full h-72 object-cover"
                 />
-                {member.video && (
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    onClick={() => toggleVideoPlay(index)}
-                    className="absolute top-4 right-4 bg-black/50 p-2 rounded-full"
-                  >
-                    {activeVideo === index ? <Pause className="text-white" /> : <Play className="text-white" />}
-                  </motion.button>
-                )}
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold text-green-300 mb-1">{member.name}</h3>

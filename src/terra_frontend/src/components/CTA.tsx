@@ -237,7 +237,7 @@ const CTASection = () => {
                     className="text-green-600 font-bold flex items-center gap-1 md:gap-2 
                                hover:text-green-700 transition-colors text-sm md:text-base"
                   >
-                    Go to Dashboard <ExternalLink size={14} md:size={18} />
+                    Go to Dashboard <ExternalLink className="w-3.5 md:w-4.5 h-3.5 md:h-4.5" />
                   </a>
                 </motion.div>
               </motion.div>

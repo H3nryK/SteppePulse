@@ -29,7 +29,7 @@ const MarketplacePage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   // Simulated data generation
-  const generateChartData = (baseline) => {
+  const generateChartData = (baseline: number) => {
     return Array.from({ length: 6 }, (_, i) => ({
       name: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'][i],
       value: baseline + Math.random() * 2000
