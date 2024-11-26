@@ -11,47 +11,21 @@ import ContactPage from './pages/ContactPage';
 import { motion } from 'framer-motion';
 import Example from './components/Example';
 import Categories from './pages/Categories';
-
-// Loading animation component
-const LoadingScreen = () => (
-  <motion.div
-    initial={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    className="fixed inset-0 bg-emerald-900 flex items-center justify-center z-50"
-  >
-    <motion.div
-      animate={{
-        scale: [1, 1.2, 1],
-        rotate: [0, 180, 360],
-      }}
-      transition={{
-        duration: 2,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }}
-      className="w-16 h-16 border-4 border-white border-t-transparent rounded-full"
-    />
-  </motion.div>
-);
+import Preloader from './components/Preloader';
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = React.useState(true);
 
-  useEffect(() => {
-    // Simulate initial loading
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+  };
 
   return (
     <Router>
       <div className="min-h-screen flex flex-col bg-gray-50">
         <AnimatePresence mode="wait">
           {isLoading ? (
-            <LoadingScreen />
+            <Preloader onComplete={handleLoadingComplete} />
           ) : (
             <>
               <Navigation />
@@ -65,8 +39,6 @@ const App: React.FC = () => {
                     <Route path="/contact" element={<ContactPage />} />
                     <Route path='/explore' element={<Example />} />
                     <Route path="/category" element={<Categories />} />
-                    
-                   
                   </Routes>
                 </AnimatePresence>
               </main>

@@ -1,155 +1,150 @@
-'use client'
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Heart, Share2, Info } from 'lucide-react';
 
+const WildlifeNFTCollection = () => {
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [liked, setLiked] = useState(false);
 
-const product = {
-  name: 'Wildlife NFT Collection',
-  price: 'Variable',
-  href: '#',
-  breadcrumbs: [
-    { id: 1, name: 'Wildlife', href: '#' },
-    { id: 2, name: 'NFTs', href: '#' },
-  ],
-  images: [
-    {
-      src: '/images/bg-7.jpg', // Replace with your image
-      alt: 'A digital artwork of an endangered species in its natural habitat.',
-    },
-    {
-      src: '/images/bg-5.avif', // Replace with your image
-      alt: 'A beautiful depiction of a rare animal in the wild.',
-    },
-    {
-      src: '/images/bg-6.jpg', // Replace with your image
-      alt: 'A mesmerizing scene showing a majestic wildlife animal.',
-    },
-    {
-      src: '/images/bg-8.jpg', // Replace with your image
-      alt: 'A breathtaking representation of wildlife conservation.',
-    },
-  ],
-  description:
-    'By acquiring one of these exclusive Wildlife NFTs, you are not just getting a unique digital art piece, but you are also contributing to wildlife conservation efforts. Each NFT represents a specific endangered species, highlighting their beauty and vulnerability. Your purchase helps raise awareness and supports projects aimed at preserving these majestic creatures and their habitats for future generations. These NFTs serve as a token of your commitment to protecting wildlife and making a positive impact on the planet.',
-  highlights: [
-    'Unique, one-of-a-kind digital wildlife artwork',
-    'Each NFT represents a specific endangered species',
-    'Part of the proceeds go towards wildlife conservation efforts',
-    'Limited edition series with rare species depictions',
-  ],
-  details:
-    'This Wildlife NFT Collection includes a series of limited edition digital artworks depicting various endangered species from across the globe. By owning one of these NFTs, you become part of a global community dedicated to wildlife preservation. Your NFT serves as a symbolic gesture of support for the conservation of these animals and their habitats.',
-}
+  const product = {
+    name: 'Wildlife Conservation NFT Collection',
+    price: 'Variable Pricing',
+    description: 'By acquiring one of these exclusive Wildlife NFTs, you are not just getting a unique digital art piece, but you are also contributing to wildlife conservation efforts. Each NFT represents a specific endangered species, highlighting their beauty and vulnerability.',
+    images: [
+      { src: '/images/bg-7.jpg', alt: 'Endangered Species Digital Art', species: 'Sumatran Tiger' },
+      { src: '/images/bg-5.avif', alt: 'Rare Animal Artwork', species: 'Amur Leopard' },
+      { src: '/images/bg-6.jpg', alt: 'Majestic Wildlife Scene', species: 'Mountain Gorilla' },
+      { src: '/images/bg-8.jpg', alt: 'Wildlife Conservation Representation', species: 'Black Rhino' }
+    ],
+    conservationImpact: [
+      { metric: 'Acres Protected', value: '500+' },
+      { metric: 'Species Supported', value: '12' },
+      { metric: 'Funds Raised', value: '$250,000+' }
+    ]
+  };
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
-}
-
-export default function Example() {
   return (
-    <div className="bg-gray-800"> {/* Darker background for overall page */}
-      <div className="pt-6">
-        <nav aria-label="Breadcrumb">
-          <ol role="list" className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-            {product.breadcrumbs.map((breadcrumb) => (
-              <li key={breadcrumb.id}>
-                <div className="flex items-center">
-                  <a href={breadcrumb.href} className="mr-2 text-sm font-medium text-gray-400">
-                    {breadcrumb.name}
-                  </a>
-                  <svg
-                    fill="currentColor"
-                    width={16}
-                    height={20}
-                    viewBox="0 0 16 20"
-                    aria-hidden="true"
-                    className="h-5 w-4 text-gray-300"
-                  >
-                    <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-                  </svg>
-                </div>
-              </li>
-            ))}
-            <li className="text-sm">
-              <a href={product.href} aria-current="page" className="font-medium text-gray-500 hover:text-gray-600">
-                {product.name}
-              </a>
-            </li>
-          </ol>
-        </nav>
+    <div className="bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen text-white">
+      <div className="container mx-auto px-4 py-12">
+        {/* Header Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-12 mt-16 text-center"
+        >
+          <h1 className="text-4xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">
+            {product.name}
+          </h1>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            Transform Digital Art into Real-World Conservation
+          </p>
+        </motion.div>
 
-        {/* Image gallery with darker overlay */}
-        <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
-          <div className="relative group">
-            <img
-              alt={product.images[0].alt}
-              src={product.images[0].src}
-              className="hidden aspect-[3/4] size-full rounded-lg object-cover lg:block"
+        {/* Image Gallery */}
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Main Image */}
+          <motion.div 
+            key={selectedImage}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="relative group"
+          >
+            <img 
+              src={product.images[selectedImage].src} 
+              alt={product.images[selectedImage].alt}
+              className="w-full rounded-xl shadow-2xl object-cover max-h-[600px]"
             />
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <button className="bg-green-600 text-white py-2 px-4 rounded-lg transform hover:scale-110 transition-transform duration-300">
-                Shop Now
-              </button>
+            <div className="absolute top-4 right-4 flex space-x-4">
+              <motion.button 
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setLiked(!liked)}
+                className={`p-2 rounded-full ${liked ? 'bg-red-500 text-white' : 'bg-white/20 text-white'}`}
+              >
+                <Heart fill={liked ? 'white' : 'transparent'} />
+              </motion.button>
+              <motion.button 
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="bg-white/20 p-2 rounded-full text-white"
+              >
+                <Share2 />
+              </motion.button>
             </div>
-          </div>
-          <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
-            <div className="relative group">
-              <img
-                alt={product.images[1].alt}
-                src={product.images[1].src}
-                className="aspect-[3/2] size-full rounded-lg object-cover"
+            <div className="absolute bottom-4 left-4 bg-black/50 px-4 py-2 rounded-lg">
+              <p className="text-white font-semibold">
+                {product.images[selectedImage].species}
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Thumbnail Gallery */}
+          <div className="grid grid-cols-4 gap-4">
+            {product.images.map((img, index) => (
+              <motion.img 
+                key={index}
+                src={img.src}
+                alt={img.alt}
+                onClick={() => setSelectedImage(index)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className={`rounded-lg cursor-pointer object-cover aspect-square 
+                  ${selectedImage === index 
+                    ? 'border-4 border-green-500 opacity-100' 
+                    : 'opacity-60 hover:opacity-100'
+                  }`}
               />
-              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <button className="bg-green-600 text-white py-2 px-4 rounded-lg transform hover:scale-110 transition-transform duration-300">
-                  Learn More
-                </button>
-              </div>
-            </div>
-            <div className="relative group">
-              <img
-                alt={product.images[2].alt}
-                src={product.images[2].src}
-                className="aspect-[3/2] size-full rounded-lg object-cover"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <button className="bg-green-600 text-white py-2 px-4 rounded-lg transform hover:scale-110 transition-transform duration-300">
-                  Learn More
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="relative group">
-            <img
-              alt={product.images[3].alt}
-              src={product.images[3].src}
-              className="aspect-[4/5] size-full object-cover sm:rounded-lg lg:aspect-[3/4]"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <button className="bg-green-600 text-white py-2 px-4 rounded-lg transform hover:scale-110 transition-transform duration-300">
-                Shop Now
-              </button>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* Product info */}
-        <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
-          <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-            <h1 className="text-2xl font-bold tracking-tight text-gray-300 sm:text-3xl">{product.name}</h1>
-
-            {/* Product description */}
-            <p className="mt-4 text-base text-gray-400">{product.description}</p>
+        {/* Conservation Impact */}
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-12 bg-gray-800 rounded-xl p-6 shadow-lg"
+        >
+          <h2 className="text-2xl font-bold mb-6 text-center flex items-center justify-center">
+            <Info className="mr-3 text-green-500" /> Conservation Impact
+          </h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            {product.conservationImpact.map((impact, index) => (
+              <div 
+                key={index} 
+                className="text-center bg-gray-700 p-4 rounded-lg"
+              >
+                <div className="text-4xl font-extrabold text-green-500 mb-2">
+                  {impact.value}
+                </div>
+                <div className="text-gray-300">{impact.metric}</div>
+              </div>
+            ))}
           </div>
+        </motion.div>
 
-          {/* Learn More About NFTs button */}
-          <div className="mt-10 lg:row-span-3 lg:mt-0">
-            <button
-              type="button"
-              className="inline-block w-full rounded-lg bg-green-600 py-3 text-base font-semibold text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-            >
-              Learn More About NFTs
-            </button>
-          </div>
+        {/* Purchase & Learn More */}
+        <div className="mt-12 flex justify-center space-x-4">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-green-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-green-700 transition"
+          >
+            Purchase NFT
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-700 transition"
+          >
+            Learn More
+          </motion.button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
+
+export default WildlifeNFTCollection;

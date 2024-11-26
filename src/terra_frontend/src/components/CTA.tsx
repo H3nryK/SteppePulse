@@ -1,159 +1,249 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Leaf, Wallet, TreePine, ExternalLink } from 'lucide-react';
+import React, { useEffect, useState, useRef } from 'react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { 
+  Leaf, 
+  Wallet, 
+  TreePine, 
+  ExternalLink, 
+  Globe, 
+  Shield, 
+  PlaneTakeoff 
+} from 'lucide-react';
 
 const CTASection = () => {
+  const [currentBgIndex, setCurrentBgIndex] = useState(0);
+  const [activeFeature, setActiveFeature] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
   const bgImages = [
-    "url('/images/bg-7.jpg')",
-    "url('/images/bg-8.jpg')",
-    "url('/images/bg-6.jpg')",
-    "url('/images/bg-5.avif')",
-    "url('/images/bg-5.avif')"
+    "/images/rainforest-canopy.jpg",
+    "/images/coral-reef-wide.jpg",
+    "/images/savanna-sunset.jpg",
+    "/images/mountain-conservation.jpg",
+    "/images/river-ecosystem.jpg"
   ];
 
-  const [currentBgIndex, setCurrentBgIndex] = useState(0);
+  const features = [
+    {
+      icon: Globe,
+      title: "Global Impact",
+      description: "Your token directly supports conservation efforts across continents."
+    },
+    {
+      icon: Shield,
+      title: "Blockchain Transparency",
+      description: "Track exactly how your contribution protects endangered habitats."
+    },
+    {
+      icon: PlaneTakeoff,
+      title: "Innovative Conservation",
+      description: "Pioneering blockchain technology to revolutionize wildlife preservation."
+    }
+  ];
 
-  // Change background image every 5 seconds
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentBgIndex((prevIndex) => (prevIndex + 1) % bgImages.length);
-    }, 5000); // Change image every 5 seconds
+    const bgInterval = setInterval(() => {
+      setCurrentBgIndex((prev) => (prev + 1) % bgImages.length);
+    }, 7000);
 
-    return () => clearInterval(interval); // Cleanup interval on unmount
-  }, [bgImages.length]);
+    const featureInterval = setInterval(() => {
+      setActiveFeature((prev) => (prev + 1) % features.length);
+    }, 4000);
+
+    return () => {
+      clearInterval(bgInterval);
+      clearInterval(featureInterval);
+    };
+  }, [bgImages.length, features.length]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.3,
-        delayChildren: 0.2
+        staggerChildren: 0.2,
+        delayChildren: 0.3
       }
     }
   };
 
   const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
+    hidden: { y: 50, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
         type: "spring",
-        stiffness: 100
+        stiffness: 120,
+        damping: 12
       }
     }
   };
 
   return (
     <section
-      className="relative h-screen overflow-hidden py-24"
+      ref={ref}
+      className="relative w-screen min-h-screen overflow-hidden flex items-center justify-center"
       style={{
-        backgroundImage: bgImages[currentBgIndex],
+        backgroundImage: `url(${bgImages[currentBgIndex]})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        height: '100vh',
-        width: '100vw',
-        transition: 'background-image 1s ease-in-out'
-        
+        transition: 'background-image 1.5s ease-in-out'
       }}
     >
-      {/* Animated background elements */}
-      <div className="absolute inset-0">
-        {[...Array(2)].map((_, i) => (
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-green-900/50 to-blue-900/50 backdrop-blur-sm" />
+
+      {/* Animated Background Elements */}
+      <motion.div 
+        className="absolute inset-0 pointer-events-none"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 0.3, 0] }}
+        transition={{ duration: 10, repeat: Infinity }}
+      >
+        {features.map((_, i) => (
           <motion.div
             key={i}
             animate={{
-              scale: [1, 1.2, 1],
+              scale: [1, 1.3, 1],
               rotate: [0, 180, 360],
-              x: [0, 100, 0],
-              y: [0, 50, 0]
+              x: [0, 100, -100, 0],
+              y: [0, 50, -50, 0]
             }}
             transition={{
-              duration: 15 + i * 5,
+              duration: 20,
               repeat: Infinity,
-              ease: "linear"
+              ease: "easeInOut"
             }}
-            className={`absolute ${i === 0 ? '-right-1/4' : '-left-1/4'} 
-                      ${i === 0 ? 'top-1/4' : 'bottom-1/4'} 
-                      w-1/2 h-1/2 bg-gradient-to-br from-green-300/20 to-blue-300/20 
-                      rounded-full blur-3xl`}
+            className={`absolute ${i === 0 ? 'right-1/4 top-1/4' : 'left-1/4 bottom-1/4'} 
+                        w-1/3 h-1/3 bg-gradient-to-br from-green-300/20 to-blue-300/20 
+                        rounded-full blur-2xl opacity-50`}
           />
         ))}
-      </div>
+      </motion.div>
 
-      {/* Main content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="text-center"
-        >
-          <motion.h2 
-            variants={itemVariants}
-            className="text-6xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-6"
-          >
-            Join the Conservation Revolution
-          </motion.h2>
-          
-          <motion.p 
-            variants={itemVariants}
-            className="text-2xl text-gray-700 max-w-3xl mx-auto mb-12 leading-relaxed"
-          >
-            Tokenize wildlife, support conservation efforts, and become part of a global 
-            community dedicated to protecting our planet's most precious ecosystems.
-          </motion.p>
-          
-          <motion.div
-            variants={itemVariants}
-            className="flex flex-wrap justify-center gap-6 mb-16"
-          >
-            <motion.button
-              whileHover={{ scale: 1.05, backgroundColor: '#047857' }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-10 py-4 rounded-full text-lg font-semibold flex items-center shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <Wallet className="mr-2" /> Connect Wallet
-            </motion.button>
-            
-            <motion.button
-              whileHover={{ scale: 1.05, backgroundColor: '#f0fdf4' }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white/80 backdrop-blur-sm border-2 border-green-600 text-green-600 px-10 py-4 rounded-full text-lg font-semibold flex items-center shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <TreePine className="mr-2" /> Explore NFTs
-            </motion.button>
-          </motion.div>
-
-          <motion.div 
-            variants={itemVariants}
-            className="flex justify-center items-center gap-8"
-          >
+      {/* Main Content */}
+      <div className="relative z-10 w-full max-w-full px-4 sm:px-6 lg:px-8 text-center">
+        <AnimatePresence>
+          {isInView && (
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="group relative bg-white/90 backdrop-blur-lg rounded-2xl p-6 shadow-xl border border-gray-200"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              className="space-y-8 w-full"
             >
+              <motion.h1 
+                variants={itemVariants}
+                className="text-5xl md:text-7xl font-extrabold bg-gradient-to-r from-green-400 via-blue-500 to-green-600 
+                           bg-clip-text text-transparent leading-tight mb-6 drop-shadow-2xl"
+              >
+                Revolutionize Conservation
+              </motion.h1>
+
+              <motion.p 
+                variants={itemVariants}
+                className="text-xl md:text-3xl text-white max-w-4xl mx-auto mb-12 leading-relaxed 
+                           font-medium tracking-wide drop-shadow-xl px-4"
+              >
+                Transform environmental protection through blockchain. 
+                Each token is a direct lifeline to preserving our planet's most critical ecosystems.
+              </motion.p>
+
+              {/* Call-to-Action Buttons */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-blue-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl rounded-2xl"
-              />
-              <div className="relative flex items-center gap-2">
-                <Leaf className="w-6 h-6 text-green-600" />
-                <p className="text-gray-600">Already part of TerraPulse?</p>
-                <a 
-                  href="/dashboard" 
-                  className="text-green-600 font-semibold flex items-center gap-1 hover:text-green-700"
+                variants={itemVariants}
+                className="flex justify-center space-x-4 md:space-x-6 mb-16 px-4"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.05, backgroundColor: '#047857' }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-gradient-to-r from-green-600 to-emerald-700 text-white 
+                             px-6 md:px-12 py-3 md:py-5 rounded-full text-base md:text-xl font-bold 
+                             flex items-center gap-3 shadow-2xl hover:shadow-green-700/50 
+                             transition-all duration-300 ease-in-out"
                 >
-                  Go to Dashboard <ExternalLink size={16} />
-                </a>
-              </div>
+                  <Wallet className="w-5 md:w-7 h-5 md:h-7" /> Connect Wallet
+                </motion.button>
+                
+                <motion.button
+                  whileHover={{ scale: 1.05, backgroundColor: '#f0fdf4' }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-white/90 backdrop-blur-sm border-2 border-green-600 
+                             text-green-700 px-6 md:px-12 py-3 md:py-5 rounded-full text-base md:text-xl font-bold 
+                             flex items-center gap-3 shadow-2xl hover:shadow-green-600/50 
+                             transition-all duration-300 ease-in-out"
+                >
+                  <TreePine className="w-5 md:w-7 h-5 md:h-7" /> Explore NFTs
+                </motion.button>
+              </motion.div>
+
+              {/* Dynamic Features Carousel */}
+              <motion.div 
+                variants={itemVariants}
+                className="flex justify-center px-4"
+              >
+                <div className="bg-white/80 backdrop-blur-lg rounded-3xl p-6 md:p-8 max-w-4xl w-full">
+                  <div className="flex items-center justify-between">
+                    {features.map((feature, idx) => {
+                      const FeatureIcon = feature.icon;
+                      return (
+                        <motion.div
+                          key={feature.title}
+                          className={`flex items-center gap-2 md:gap-4 p-2 md:p-4 rounded-xl transition-all duration-300 cursor-pointer ${
+                            activeFeature === idx 
+                              ? 'bg-green-100 text-green-800 scale-105' 
+                              : 'text-gray-600 opacity-70'
+                          }`}
+                          whileHover={{ scale: 1.05 }}
+                          onClick={() => setActiveFeature(idx)}
+                        >
+                          <FeatureIcon className="w-5 md:w-8 h-5 md:h-8" />
+                          <span className="font-semibold text-sm md:text-lg">{feature.title}</span>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                  <motion.p 
+                    key={activeFeature}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-center text-base md:text-xl text-gray-700 mt-4 md:mt-6"
+                  >
+                    {features[activeFeature].description}
+                  </motion.p>
+                </div>
+              </motion.div>
+
+              {/* Dashboard Link */}
+              <motion.div 
+                variants={itemVariants}
+                className="flex justify-center px-4"
+              >
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="bg-white/90 backdrop-blur-lg rounded-2xl px-6 md:px-8 py-3 md:py-4 
+                             flex items-center gap-3 md:gap-4 shadow-xl hover:shadow-green-600/30 
+                             transition-all duration-300"
+                >
+                  <Leaf className="w-4 md:w-6 h-4 md:h-6 text-green-600" />
+                  <p className="text-sm md:text-base text-gray-700">Already part of TerraPulse?</p>
+                  <a 
+                    href="/dashboard" 
+                    className="text-green-600 font-bold flex items-center gap-1 md:gap-2 
+                               hover:text-green-700 transition-colors text-sm md:text-base"
+                  >
+                    Go to Dashboard <ExternalLink size={14} md:size={18} />
+                  </a>
+                </motion.div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
