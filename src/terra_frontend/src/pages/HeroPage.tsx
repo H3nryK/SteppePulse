@@ -53,6 +53,25 @@ const HeroPage = () => {
     },
   };
 
+  // Enhanced animation variants
+  const variants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: (delay = 0) => ({
+      opacity: 1,
+      y: 0,
+      transition: { 
+        delay, 
+        duration: 0.6, 
+        type: "spring", 
+        stiffness: 100 
+      }
+    }),
+    hover: { 
+      scale: 1.05,
+      transition: { duration: 0.3 }
+    }
+  };
+
   const itemVariants = {
     hidden: { y: 50, opacity: 0 },
     visible: {
@@ -87,15 +106,10 @@ const HeroPage = () => {
       {/* Hero Section with Enhanced Video Background */}
       <div className="relative min-h-screen flex items-center justify-center">
         <div className="absolute inset-0">
-          <video
-            ref={videoRef}
+          <img
             className="absolute inset-0 w-full h-full object-cover"
-            autoPlay
-            loop
-            muted
-            playsInline
-            src="/videos/bg.mp4"
-          ></video>
+            src="/images/bg-8.jpg"
+          />
           
           {/* More Dynamic Overlay */}
           <motion.div 
@@ -103,15 +117,6 @@ const HeroPage = () => {
             className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/75 to-black/90"
           ></motion.div>
           
-          {/* Video Playback Toggle */}
-          <motion.button
-            onClick={toggleVideoPlayback}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className="absolute top-20 right-6 z-50 bg-white/20 backdrop-blur-md p-3 rounded-full"
-          >
-            {isVideoPlaying ? <Pause className="text-white" /> : <Play className="text-white" />}
-          </motion.button>
         </div>
 
         <div className="relative z-20 container mx-auto px-4 py-24">
@@ -165,47 +170,80 @@ const HeroPage = () => {
         </div>
       </div>
 
-      {/* Enhanced Features Section */}
-      <div className="relative z-20 min-h-[75vh] flex items-center justify-center">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
-          className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4"
-        >
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
+      <div className="relative z-10 min-h-[75vh] flex items-center justify-center px-4 py-16">
+        <div className="container mx-auto">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-100px' }}
+            className="space-y-12"
+          >
+            <motion.h1 
               variants={itemVariants}
-              whileHover={{ 
-                scale: 1.05, 
-                rotate: index % 2 === 0 ? 2 : -2,
-                transition: { duration: 0.3 }
-              }}
-              className="relative group"
+              className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 text-center mb-12"
             >
-              <div className="bg-gray-900/60 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-gray-700/50 transform transition-all duration-300 hover:border-emerald-500/50">
-                <div
-                  className={`inline-block p-3 rounded-xl bg-gradient-to-br ${feature.color} mb-4 shadow-lg`}
-                >
-                  <feature.icon className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-300 mb-4">{feature.text}</p>
+              Our Key Features
+            </motion.h1>
+
+            <motion.div
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
+              {features.map((feature, index) => (
                 <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  whileHover={{ height: 'auto', opacity: 1 }}
-                  className="overflow-hidden text-gray-400 text-sm"
+                  key={index}
+                  variants={itemVariants}
+                  whileHover={{ 
+                    scale: 1.05, 
+                    rotateY: index % 2 === 0 ? 5 : -5,
+                    transition: { duration: 0.3 }
+                  }}
+                  className="group perspective-1000"
                 >
-                  {feature.details}
+                  <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl transition-all duration-300 hover:border-emerald-500/50 hover:shadow-emerald-500/30 transform hover:-translate-y-3">
+                    <div 
+                      className={`inline-block p-4 rounded-2xl ${feature.color} mb-6 shadow-lg transition-transform group-hover:rotate-6`}
+                    >
+                      <feature.icon className="w-10 h-10 text-white" />
+                    </div>
+                    <div className="space-y-4">
+                      <h3 className="text-2xl font-bold text-white">
+                        {feature.title}
+                      </h3>
+                      <p className="text-gray-300 text-base">
+                        {feature.text}
+                      </p>
+                      <motion.div
+                        initial={{ 
+                          height: 0, 
+                          opacity: 0,
+                          marginTop: 0
+                        }}
+                        whileHover={{ 
+                          height: 'auto', 
+                          opacity: 1,
+                          marginTop: 16
+                        }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden text-gray-400 text-sm"
+                      >
+                        {feature.details}
+                      </motion.div>
+                      <div className="pt-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <a 
+                          href="#" 
+                          className="text-emerald-400 hover:text-emerald-300 flex items-center gap-2 text-sm"
+                        >
+                          Learn More
+                        </a>
+                      </div>
+                    </div>
+                  </div>
                 </motion.div>
-              </div>
+              ))}
             </motion.div>
-          ))}
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
 
       {/* CTA Section */}
