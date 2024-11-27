@@ -11,6 +11,7 @@ import ContactPage from './pages/ContactPage';
 import Example from './components/Example';
 import Categories from './pages/Categories';
 import Preloader from './components/Preloader';
+import ConservationDashboard from './pages/Dashboard';
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = React.useState(true);
@@ -38,6 +39,7 @@ const App: React.FC = () => {
                     <Route path="/contact" element={<ContactPage />} />
                     <Route path='/explore' element={<Example />} />
                     <Route path="/category" element={<Categories />} />
+                    <Route path="/dashboard" element={<ConservationDashboard />} />
                   </Routes>
                 </AnimatePresence>
               </main>

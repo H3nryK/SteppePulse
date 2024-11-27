@@ -353,7 +353,7 @@ const CTASection = () => {
                              transition-all duration-300"
                 >
                   <Leaf className="w-4 md:w-6 h-4 md:h-6 text-green-600" />
-                  <p className="text-sm md:text-base text-gray-700">Already part of TerraPulse?</p>
+                  <p className="text-sm md:text-base text-gray-700">Already part of SteppePulse?</p>
                   <a 
                     href="/dashboard" 
                     className="text-green-600 font-bold flex items-center gap-1 md:gap-2 

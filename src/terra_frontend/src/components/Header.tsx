@@ -115,6 +115,7 @@ const Navigation = () => {
 
   const navItems = [
     { icon: Home, label: 'Home', path: '/' },
+    { icon: Home, label: 'Dashboard', path: '/dashboard' },
     { icon: ShoppingCart, label: 'NFT Tokens', path: '/nft-tokens' },
     { icon: TrendingUp, label: 'Marketplace', path: '/marketplace' },
     { icon: Info, label: 'About', path: '/about' },
