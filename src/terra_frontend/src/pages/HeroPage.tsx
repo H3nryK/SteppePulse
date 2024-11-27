@@ -200,7 +200,7 @@ const HeroPage = () => {
                   }}
                   className="group perspective-1000"
                 >
-                  <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl transition-all duration-300 hover:border-emerald-500/50 hover:shadow-emerald-500/30 transform hover:-translate-y-3">
+                  <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20 shadow-2xl transition-all duration-300 hover:border-emerald-500/50 hover:shadow-emerald-500/30 transform hover:-translate-y-3">
                     <div 
                       className={`inline-block p-4 rounded-2xl ${feature.color} mb-6 shadow-lg transition-transform group-hover:rotate-6`}
                     >
