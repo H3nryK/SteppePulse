@@ -487,4 +487,9 @@ actor TerraPulse {
     system func postupgrade() {
         // Add post-upgrade logic
     };
+
+    // Internet Identity integration
+    public shared(msg) func whoami() : async Principal {
+        msg.caller
+    };
 }

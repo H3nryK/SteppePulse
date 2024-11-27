@@ -10,9 +10,104 @@ import {
   PlaneTakeoff 
 } from 'lucide-react';
 
+// Wallet Connection Modal (Same as in Navigation)
+const WalletConnectionModal = ({ isOpen, onClose, onConnect }: { isOpen: boolean; onClose: () => void; onConnect: (walletId: string) => void }) => {
+  const walletOptions = [
+    { 
+      id: 'plug', 
+      name: 'Plug Wallet', 
+      logo: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-16 h-16">
+          <circle cx="24" cy="24" r="22" fill="#4CAF50" />
+          <path d="M24 12v24c6.627 0 12-5.373 12-12S30.627 12 24 12z" fill="#45A049" />
+          <path d="M24 12v24c-6.627 0-12-5.373-12-12S17.373 12 24 12z" fill="#2E7D32" />
+        </svg>
+      ),
+      description: "Seamless crypto wallet for Web3"
+    },
+    { 
+      id: 'nfid', 
+      name: 'NFID', 
+      logo: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-16 h-16">
+          <rect width="48" height="48" rx="10" fill="#2196F3" />
+          <path d="M24 14l-8 8h5v12h6V22h5z" fill="white" />
+        </svg>
+      ),
+      description: "Secure identity wallet"
+    },
+    { 
+      id: 'internet-identity', 
+      name: 'Internet Identity', 
+      logo: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-16 h-16">
+          <circle cx="24" cy="24" r="22" fill="#673AB7" />
+          <path d="M24 15c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z" fill="white" />
+        </svg>
+      ),
+      description: "Decentralized identity solution"
+    }
+  ];
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4"
+          onClick={onClose}
+        >
+          <motion.div 
+            initial={{ scale: 0.8, rotateY: -30 }}
+            animate={{ scale: 1, rotateY: 0 }}
+            transition={{ type: 'spring', stiffness: 300 }}
+            className="bg-gray-900 rounded-2xl p-6 w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-2xl font-bold text-white mb-4 text-center">
+              Connect Your Wallet
+            </h2>
+            <p className="text-gray-400 text-center mb-6">
+              Choose a wallet to connect and access TerraPulse
+            </p>
+            <div className="space-y-4">
+              {walletOptions.map((wallet) => (
+                <motion.button
+                  key={wallet.id}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => onConnect(wallet.id)}
+                  className="w-full flex items-center space-x-4 bg-gray-800 p-4 rounded-xl hover:bg-gray-700 transition-all"
+                >
+                  {wallet.logo}
+                  <div className="text-left">
+                    <h3 className="text-white font-semibold">{wallet.name}</h3>
+                    <p className="text-gray-400 text-sm">{wallet.description}</p>
+                  </div>
+                </motion.button>
+              ))}
+            </div>
+            <motion.button
+              onClick={onClose}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full mt-4 bg-gray-700 text-white py-3 rounded-xl hover:bg-gray-600 transition-all"
+            >
+              Cancel
+            </motion.button>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
 const CTASection = () => {
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
   const [activeFeature, setActiveFeature] = useState(0);
+  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
 
@@ -56,6 +151,25 @@ const CTASection = () => {
       clearInterval(featureInterval);
     };
   }, [bgImages.length, features.length]);
+
+  const handleWalletConnection = (walletType: string) => {
+    // Implement wallet connection logic
+    switch(walletType) {
+      case 'plug':
+        console.log('Connecting with Plug Wallet');
+        // Add Plug wallet connection logic
+        break;
+      case 'nfid':
+        console.log('Connecting with NFID');
+        // Add NFID connection logic
+        break;
+      case 'internet-identity':
+        console.log('Connecting with Internet Identity');
+        // Add Internet Identity connection logic
+        break;
+    }
+    setIsWalletModalOpen(false);
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -158,6 +272,7 @@ const CTASection = () => {
                 className="flex justify-center space-x-4 md:space-x-6 mb-16 px-4"
               >
                 <motion.button
+                  onClick={() => setIsWalletModalOpen(true)}
                   whileHover={{ scale: 1.05, backgroundColor: '#047857' }}
                   whileTap={{ scale: 0.95 }}
                   className="bg-gradient-to-r from-green-600 to-emerald-700 text-white 
@@ -179,6 +294,13 @@ const CTASection = () => {
                   <TreePine className="w-5 md:w-7 h-5 md:h-7" /> Explore NFTs
                 </motion.button>
               </motion.div>
+
+              {/* Wallet Connection Modal */}
+              <WalletConnectionModal 
+                isOpen={isWalletModalOpen}
+                onClose={() => setIsWalletModalOpen(false)}
+                onConnect={handleWalletConnection}
+              />
 
               {/* Dynamic Features Carousel */}
               <motion.div 
