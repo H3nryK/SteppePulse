@@ -28,6 +28,8 @@ import {
 import { EventHandlers } from '@react-three/fiber/dist/declarations/src/core/events';
 import { JSX } from 'react/jsx-runtime';
 
+import { terra_backend } from '../../../declarations/terra_backend';
+
 // Type Definitions
 type UserId = string;
 type NFTId = string;
@@ -98,7 +100,8 @@ function EarthGlobe(props: JSX.IntrinsicAttributes & Omit<ExtendedColors<Overwri
 }
 
 // Main Dashboard Component
-const ConservationDashboard: React.FC = () => {
+const ConservationDashboard = ({ onLogout }) => {
+  const [isLoading, setIsLoading] = useState(false);
   // State Management
   const [userProfile, setUserProfile] = useState<UserProfile>({
     id: 'user_001',
@@ -181,6 +184,19 @@ const ConservationDashboard: React.FC = () => {
       rarity: 'Epic'
     }
   ]);
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        const principal = await insurance_backend.whoami();
+        console.log("Connected to backend. Principal:", principal);
+      } catch (error) {
+        console.error("Error connecting to backend:", error);
+        setError("Failed to connect to the backend. Please check the console for more details.");
+      }
+    };
+    init();
+  }, []);
 
   // 3D Visualization Render
   const DashboardVisualization = () => (

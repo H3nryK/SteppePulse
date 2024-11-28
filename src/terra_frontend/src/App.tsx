@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navigation from './components/Header';
 import Footer from './components/Footer';
@@ -13,8 +13,11 @@ import Categories from './pages/Categories';
 import Preloader from './components/Preloader';
 import ConservationDashboard from './pages/Dashboard';
 
+import { useAuth } from './components/AuthContext';
+
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = React.useState(true);
+  const { isAuthenticated, login, logout } = useAuth();
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
@@ -39,7 +42,7 @@ const App: React.FC = () => {
                     <Route path="/contact" element={<ContactPage />} />
                     <Route path='/explore' element={<Example />} />
                     <Route path="/category" element={<Categories />} />
-                    <Route path="/dashboard" element={<ConservationDashboard />} />
+                    <Route path="/dashboard" element={ isAuthenticated ? <ConservationDashboard onLogout={logout} /> : <Navigate to="/" replace />} />
                   </Routes>
                 </AnimatePresence>
               </main>
