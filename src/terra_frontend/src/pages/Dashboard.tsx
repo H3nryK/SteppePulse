@@ -29,6 +29,7 @@ import { EventHandlers } from '@react-three/fiber/dist/declarations/src/core/eve
 import { JSX } from 'react/jsx-runtime';
 
 import { terra_backend } from '../../../declarations/terra_backend';
+import { Principal } from '@dfinity/principal';
 
 // Type Definitions
 type UserId = string;
@@ -102,6 +103,37 @@ function EarthGlobe(props: JSX.IntrinsicAttributes & Omit<ExtendedColors<Overwri
 // Main Dashboard Component
 const ConservationDashboard = ({ onLogout }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [principal, setPrincipal] = useState('');
+
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
+
+  const fetchUserInfo = async () => {
+    setIsLoading(true);
+    try {
+      const info = await terra_backend.whoami();
+      const principal = blobToPrincipal(info._arr);
+      setPrincipal(principal);
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Helper function to convert Uint8Array to string
+  const blobToPrincipal = (blob) => {
+    // Convert array to Uint8Array
+    const uint8Array = new Uint8Array(blob);
+  
+    // Decode as Principal
+    const principal = Principal.fromUint8Array(uint8Array);
+    
+    // Convert Principal to text format
+    return principal.toText();
+  }
+
   // State Management
   const [userProfile, setUserProfile] = useState<UserProfile>({
     id: 'user_001',
@@ -185,19 +217,6 @@ const ConservationDashboard = ({ onLogout }) => {
     }
   ]);
 
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const principal = await insurance_backend.whoami();
-        console.log("Connected to backend. Principal:", principal);
-      } catch (error) {
-        console.error("Error connecting to backend:", error);
-        setError("Failed to connect to the backend. Please check the console for more details.");
-      }
-    };
-    init();
-  }, []);
-
   // 3D Visualization Render
   const DashboardVisualization = () => (
     <Canvas>
@@ -242,7 +261,7 @@ const ConservationDashboard = ({ onLogout }) => {
               />
               <div>
                 <h2 className="text-2xl font-bold text-green-300">
-                  {userProfile.username}
+                  {principal}
                 </h2>
                 <div className="flex items-center space-x-2">
                   <Trophy 
