@@ -1,5 +1,0 @@
-[dependencies]
-base = "0.13.3"
-icrc7-mo = "0.4.1"
-icrc3-mo = "0.2.6"
-icrc37-mo = "0.4.2"
