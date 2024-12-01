@@ -43,10 +43,10 @@ const AboutPage = () => {
       video: null
     },
     {
-      name: 'Brandistone Nyambonyi',
+      name: 'Brandistone Nyabonyi',
       role: 'CTO & co-founder',
       image: '/team/brandy.jpg',
-      description: 'Software Developer',
+      description: 'Software Engineer',
       bio: 'Technical architect driving blockchain solutions for environmental impact.',
       video: null
     },
