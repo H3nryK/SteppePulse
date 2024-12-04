@@ -205,6 +205,78 @@ actor TerraPulse {
     private var conservationProjects = HashMap.HashMap<Text, ConservationProject>(0, Text.equal, Text.hash);
     private stable var systemBalance: Nat = 0;
 
+    public shared(msg) func createUserProfile(username: Text) : async Result.Result<(), Error> {
+        // Validate username
+        if (username == "" or username.size() < 3 or username.size() > 20) {
+            return #err(#InvalidInput);
+        };
+
+
+
+
+
+        // Check if username already exists
+        label usernameCheck for ((_, user) in users.entries()) {
+            if (user.username == username) {
+                return #err(#AlreadyExists);
+            };
+        };
+
+        switch (users.get(msg.caller)) {
+            case (?_) { #err(#AlreadyExists) };
+            case null {
+                let profile: UserProfile = {
+                    id = msg.caller;
+                    username = username;
+                    adoptions = [];
+                    contributions = 0;
+                    badges = [];
+                    balance = 0;
+                };
+                users.put(msg.caller, profile);
+                #ok()
+            };
+        }
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Add a new query function to get user profile
+    public query func getUserProfile(caller : Principal) : async ?UserProfile {
+        users.get(caller)
+    };
+    // Add a function to check username availability
+    public query func isUsernameAvailable(username: Text) : async Bool {
+        // Check if username is valid length
+        if (username == "" or username.size() < 3 or username.size() > 20) {
+            return false;
+        };
+
+        // Check if username already exists
+        for ((_, user) in users.entries()) {
+            if (user.username == username) {
+                return false;
+            }
+        };
+
+        true
+    };
+
     // Default achievements
     private let defaultAchievements : [Achievement] = [
         {
@@ -385,25 +457,6 @@ actor TerraPulse {
 
         conservationProjects.put(projectId, project);
         #ok(projectId)
-    };
-
-    // User Management
-    public shared(msg) func createUserProfile(username: Text) : async Result.Result<(), Error> {
-        switch (users.get(msg.caller)) {
-            case (?_) { #err(#AlreadyExists) };
-            case null {
-                let profile: UserProfile = {
-                    id = msg.caller;
-                    username = username;
-                    adoptions = [];
-                    contributions = 0;
-                    badges = [];
-                    balance = 0;
-                };
-                users.put(msg.caller, profile);
-                #ok()
-            };
-        }
     };
 
     // Helper Functions
