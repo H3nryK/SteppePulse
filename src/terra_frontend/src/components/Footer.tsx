@@ -26,27 +26,6 @@ const Footer: React.FC = () => {
             </p>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              {['Marketplace', 'NFT Tokens', 'About Us', 'Contact'].map((item) => (
-                <motion.li
-                  key={item}
-                  whileHover={{ x: 5 }}
-                  transition={{ type: 'spring', stiffness: 300 }}
-                >
-                  <a
-                    href={`/${item.toLowerCase().replace(' ', '-')}`}
-                    className="text-gray-300 hover:text-white transition-colors"
-                  >
-                    {item}
-                  </a>
-                </motion.li>
-              ))}
-            </ul>
-          </div>
-
           {/* Social Links */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Connect With Us</h3>
@@ -61,6 +40,13 @@ const Footer: React.FC = () => {
               © 2024 SteppePulse. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
+              <motion.a
+                whileHover={{ y: -2 }}
+                href="/whitepaper"
+                className="text-gray-300 hover:text-white text-sm transition-colors"
+              >
+                WhitePaper
+              </motion.a>
               <motion.a
                 whileHover={{ y: -2 }}
                 href="/privacy"

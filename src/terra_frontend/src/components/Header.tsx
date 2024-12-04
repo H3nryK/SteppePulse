@@ -16,18 +16,6 @@ import {
 const WalletConnectionModal = ({ isOpen, onClose, onConnect }: { isOpen: boolean; onClose: () => void; onConnect: (walletId: string) => void }) => {
   const walletOptions = [
     { 
-      id: 'plug', 
-      name: 'Plug Wallet', 
-      logo: (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-16 h-16">
-          <circle cx="24" cy="24" r="22" fill="#4CAF50" />
-          <path d="M24 12v24c6.627 0 12-5.373 12-12S30.627 12 24 12z" fill="#45A049" />
-          <path d="M24 12v24c-6.627 0-12-5.373-12-12S17.373 12 24 12z" fill="#2E7D32" />
-        </svg>
-      ),
-      description: "Seamless crypto wallet for Web3"
-    },
-    { 
       id: 'nfid', 
       name: 'NFID', 
       logo: (
@@ -136,7 +124,6 @@ const Navigation = () => {
     { icon: Home, label: 'Dashboard', path: '/dashboard' },
     { icon: ShoppingCart, label: 'NFT Tokens', path: '/nft-tokens' },
     { icon: TrendingUp, label: 'Marketplace', path: '/marketplace' },
-    { icon: Phone, label: 'Contact', path: '/contact' },
     { icon: Wallet, label: 'Connect Wallet', path: '#', isAction: true }
   ];
 

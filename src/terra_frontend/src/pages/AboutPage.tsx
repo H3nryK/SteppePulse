@@ -1,23 +1,12 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { 
   Heart, 
   Globe, 
   Shield, 
   Users, 
-  Target,
-  Sprout,
-  Award,
-  Camera,
-  Play,
-  Pause,
-  Send,
-  Mail,
-  MapPin,
   MessageCircle,
-  Instagram,
-  Twitter,
 } from 'lucide-react';
 import { FaWhatsapp, FaTelegram, FaInstagram } from "react-icons/fa";
 import { RiTwitterXFill } from "react-icons/ri";

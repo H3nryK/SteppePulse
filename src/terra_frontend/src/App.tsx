@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+
 import Navigation from './components/Header';
 import Footer from './components/Footer';
+import Preloader from './components/Preloader';
+
 import NFTTokensPage from './pages/NFTTokensPage';
 import MarketplacePage from './pages/MarketPlacePage';
 import AboutPage from './pages/AboutPage';
-import ContactPage from './pages/ContactPage';
 import Example from './components/Example';
 import Categories from './pages/Categories';
-import Preloader from './components/Preloader';
 import ConservationDashboard from './pages/Dashboard';
 
 const App: React.FC = () => {
@@ -34,7 +35,6 @@ const App: React.FC = () => {
                     <Route path="/" element={<AboutPage  />} />
                     <Route path="/nft-tokens" element={<NFTTokensPage />} />
                     <Route path="/marketplace" element={<MarketplacePage />} />
-                    <Route path="/contact" element={<ContactPage />} />
                     <Route path='/explore' element={<Example />} />
                     <Route path="/category" element={<Categories />} />
                     <Route path="/dashboard" element={<ConservationDashboard />} />
