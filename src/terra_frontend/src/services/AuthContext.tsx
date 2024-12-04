@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { AuthClient } from '@dfinity/auth-client';
-import { createActor } from '../../../declarations/terra_backend';
+import { createActor } from './Actor';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -59,7 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const profile = await backend.getUserProfile();
       
       if (profile) {
-        setUserProfile(profile);
+        setUserProfile(profile as UserProfile);
       }
     } catch (error) {
       console.error('Failed to fetch user profile:', error);
@@ -92,7 +92,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const profile = await backend.getUserProfile();
             
             if (profile) {
-              setUserProfile(profile);
+              setUserProfile(profile as UserProfile);
               resolve(true);
             } else {
               // Trigger onboarding modal

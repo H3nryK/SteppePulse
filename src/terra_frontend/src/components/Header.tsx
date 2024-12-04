@@ -8,13 +8,15 @@ import {
   Info, 
   Wallet,
   Menu,
-  X 
+  X,
+  LogOut 
 } from 'lucide-react';
 
 import { useAuth } from '../services/AuthContext';
 
 // Wallet Connection Modal Component
-const WalletConnectionModal = ({ isOpen, onClose, onConnect }: { isOpen: boolean; onClose: () => void; onConnect: (walletId: string) => void }) => {
+const WalletConnectionModal = ({ isOpen, onClose }) => {
+  const { login } = useAuth();
 
   const walletOptions = [
     { 
@@ -84,10 +86,13 @@ const WalletConnectionModal = ({ isOpen, onClose, onConnect }: { isOpen: boolean
                   key={wallet.id}
                   whileHover={{ 
                     scale: 1.05,
-                    backgroundColor: 'rgba(31, 41, 55, 1)' // bg-gray-800 with full opacity
+                    backgroundColor: 'rgba(31, 41, 55, 1)' 
                   }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => handleLogin(wallet.id as 'internet-identity' | 'nfid')}
+                  onClick={() => {
+                    login(wallet.id as 'internet-identity' | 'nfid');
+                    onClose();
+                  }}
                   className="w-full flex items-center space-x-6 bg-gray-900 p-5 rounded-2xl hover:shadow-lg transition-all border border-transparent hover:border-emerald-500"
                 >
                   <div className="bg-gray-800 p-3 rounded-xl">
@@ -121,32 +126,31 @@ const Navigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  const { isAuthenticated, userProfile, login, logout} = useAuth();
-
-  const handleLogin = (providerId: 'internet-identity' | 'nfid') => {
-    login(providerId);
-  };
+  const { isAuthenticated, userProfile, logout } = useAuth();
 
   const AuthItems = [
     { icon: Home, label: 'Dashboard', path: '/dashboard' },
     { icon: ShoppingCart, label: 'NFT Tokens', path: '/nft-tokens' },
-    { icon: TrendingUp, label: 'Marketplace', path: '/marketplace' },
-  ]
+    { icon: TrendingUp, label: 'Marketplace', path: '/marketplace' }
+  ];
 
   const navItems = [
     { icon: Info, label: 'Home', path: '/' },
-    { icon: Wallet, label: 'Connect Wallet', path: '#', isAction: true }
-    if (isAuthenticated) {
-      AuthItems;
-    }
+    isAuthenticated 
+      ? { icon: LogOut, label: 'Logout', path: '#', isAction: true }
+      : { icon: Wallet, label: 'Connect Wallet', path: '#', isAction: true }
   ];
+
+  // Combine auth and non-auth items when authenticated
+  const combinedNavItems = isAuthenticated 
+    ? [...navItems.slice(0, 1), ...AuthItems, navItems[1]]
+    : navItems;
 
   // Scroll effect for navbar
   const handleScroll = useCallback(() => {
     setIsScrolled(window.scrollY > 50);
   }, []);
 
-  // Scroll effect for navbar
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -159,30 +163,17 @@ const Navigation = () => {
 
   const handleNavigation = (path: string, isAction?: boolean) => {
     if (isAction) {
-      // Open wallet connection modal
-      setIsWalletModalOpen(true);
+      if (path === '#' && isAuthenticated) {
+        // Logout action
+        logout();
+        navigate('/');
+      } else {
+        // Open wallet connection modal
+        setIsWalletModalOpen(true);
+      }
       return;
     }
     navigate(path);
-  };
-
-  const handleWalletConnection = (walletType: string) => {
-    // Implement wallet connection logic
-    switch(walletType) {
-      case 'plug':
-        console.log('Connecting with Plug Wallet');
-        // Add Plug wallet connection logic
-        break;
-      case 'nfid':
-        console.log('Connecting with NFID');
-        // Add NFID connection logic
-        break;
-      case 'internet-identity':
-        console.log('Connecting with Internet Identity');
-        // Add Internet Identity connection logic
-        break;
-    }
-    setIsWalletModalOpen(false);
   };
 
   // Mobile menu animation variants
@@ -201,20 +192,6 @@ const Navigation = () => {
       transition: {
         duration: 0.3,
         ease: 'easeInOut'
-      }
-    }
-  };
-
-  // Navigation item animation variants
-  const navItemVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: { 
-      opacity: 1, 
-      x: 0,
-      transition: {
-        type: 'spring',
-        stiffness: 300,
-        delay: (index: number) => index * 0.1
       }
     }
   };
@@ -253,7 +230,7 @@ const Navigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-6 items-center">
-            {navItems.map((item, index) => (
+            {combinedNavItems.map((item, index) => (
               <motion.button
                 key={index}
                 onClick={() => handleNavigation(item.path, item.isAction)}
@@ -268,6 +245,7 @@ const Navigation = () => {
                     : 'text-white hover:text-emerald-300'
                 }`}
               >
+                <item.icon className="mr-2" size={16} />
                 {item.label}
               </motion.button>
             ))}
@@ -296,7 +274,7 @@ const Navigation = () => {
               className="md:hidden absolute left-0 right-0 top-full bg-gray-900/95 backdrop-blur-md shadow-2xl"
             >
               <div className="container mx-auto">
-                {navItems.map((item, index) => (
+                {combinedNavItems.map((item, index) => (
                   <motion.button
                     key={index}
                     initial="hidden"
@@ -335,7 +313,6 @@ const Navigation = () => {
       <WalletConnectionModal 
         isOpen={isWalletModalOpen}
         onClose={() => setIsWalletModalOpen(false)}
-        onConnect={handleWalletConnection}
       />
     </>
   );
