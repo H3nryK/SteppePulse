@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
@@ -6,7 +6,6 @@ import {
   ShoppingCart, 
   TrendingUp, 
   Info, 
-  Phone, 
   Wallet,
   Menu,
   X 
