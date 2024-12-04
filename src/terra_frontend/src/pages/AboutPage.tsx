@@ -140,7 +140,7 @@ const AboutPage = () => {
   const [contactRef, contactInView] = createInViewHook();
   const [faqRef, faqInView] = createInViewHook();
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -148,7 +148,7 @@ const AboutPage = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     e.preventDefault();
     // TODO: Implement actual form submission logic
     console.log('Form submitted', formData);
@@ -361,7 +361,7 @@ const AboutPage = () => {
           Get In Touch
         </motion.h2>
         <div className="max-w-xl mx-auto bg-gray-800/50 p-8 rounded-2xl">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form className="space-y-6">
             <div>
               <label htmlFor="name" className="block text-gray-300 mb-2">Name</label>
               <input

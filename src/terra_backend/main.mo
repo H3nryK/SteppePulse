@@ -211,10 +211,6 @@ actor TerraPulse {
             return #err(#InvalidInput);
         };
 
-
-
-
-
         // Check if username already exists
         label usernameCheck for ((_, user) in users.entries()) {
             if (user.username == username) {
@@ -238,23 +234,6 @@ actor TerraPulse {
             };
         }
     };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // Add a new query function to get user profile
     public query func getUserProfile(caller : Principal) : async ?UserProfile {

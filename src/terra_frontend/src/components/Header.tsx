@@ -11,8 +11,11 @@ import {
   X 
 } from 'lucide-react';
 
+import { useAuth } from '../services/AuthContext';
+
 // Wallet Connection Modal Component
 const WalletConnectionModal = ({ isOpen, onClose, onConnect }: { isOpen: boolean; onClose: () => void; onConnect: (walletId: string) => void }) => {
+
   const walletOptions = [
     { 
       id: 'nfid', 
@@ -84,7 +87,7 @@ const WalletConnectionModal = ({ isOpen, onClose, onConnect }: { isOpen: boolean
                     backgroundColor: 'rgba(31, 41, 55, 1)' // bg-gray-800 with full opacity
                   }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => onConnect(wallet.id)}
+                  onClick={() => handleLogin(wallet.id as 'internet-identity' | 'nfid')}
                   className="w-full flex items-center space-x-6 bg-gray-900 p-5 rounded-2xl hover:shadow-lg transition-all border border-transparent hover:border-emerald-500"
                 >
                   <div className="bg-gray-800 p-3 rounded-xl">
@@ -117,13 +120,25 @@ const Navigation = () => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  
+  const { isAuthenticated, userProfile, login, logout} = useAuth();
 
-  const navItems = [
-    { icon: Info, label: 'Home', path: '/' },
+  const handleLogin = (providerId: 'internet-identity' | 'nfid') => {
+    login(providerId);
+  };
+
+  const AuthItems = [
     { icon: Home, label: 'Dashboard', path: '/dashboard' },
     { icon: ShoppingCart, label: 'NFT Tokens', path: '/nft-tokens' },
     { icon: TrendingUp, label: 'Marketplace', path: '/marketplace' },
+  ]
+
+  const navItems = [
+    { icon: Info, label: 'Home', path: '/' },
     { icon: Wallet, label: 'Connect Wallet', path: '#', isAction: true }
+    if (isAuthenticated) {
+      AuthItems;
+    }
   ];
 
   // Scroll effect for navbar
