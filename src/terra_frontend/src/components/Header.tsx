@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
@@ -58,47 +58,65 @@ const WalletConnectionModal = ({ isOpen, onClose, onConnect }: { isOpen: boolean
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4"
           onClick={onClose}
         >
           <motion.div 
-            initial={{ scale: 0.8, rotateY: -30 }}
-            animate={{ scale: 1, rotateY: 0 }}
-            transition={{ type: 'spring', stiffness: 300 }}
-            className="bg-gray-900 rounded-2xl p-6 w-full max-w-md"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ 
+              type: 'spring', 
+              stiffness: 300, 
+              damping: 20 
+            }}
+            className="bg-gray-800 rounded-3xl p-8 w-full max-w-md shadow-2xl border border-gray-700"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-2xl font-bold text-white mb-4 text-center">
-              Connect Your Wallet
-            </h2>
-            <p className="text-gray-400 text-center mb-6">
-              Choose a wallet to connect and access SteppePulse
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-3xl font-bold text-white">
+                Connect Wallet
+              </h2>
+              <motion.button 
+                onClick={onClose}
+                whileHover={{ rotate: 90 }}
+                className="text-gray-400 hover:text-white"
+              >
+                <X size={24} />
+              </motion.button>
+            </div>
+            <p className="text-gray-400 text-center mb-8 text-sm">
+              Select a wallet to connect and access SteppePulse
             </p>
             <div className="space-y-4">
               {walletOptions.map((wallet) => (
                 <motion.button
                   key={wallet.id}
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ 
+                    scale: 1.05,
+                    backgroundColor: 'rgba(31, 41, 55, 1)' // bg-gray-800 with full opacity
+                  }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => onConnect(wallet.id)}
-                  className="w-full flex items-center space-x-4 bg-gray-800 p-4 rounded-xl hover:bg-gray-700 transition-all"
+                  className="w-full flex items-center space-x-6 bg-gray-900 p-5 rounded-2xl hover:shadow-lg transition-all border border-transparent hover:border-emerald-500"
                 >
-                  {wallet.logo}
-                  <div className="text-left">
-                    <h3 className="text-white font-semibold">{wallet.name}</h3>
-                    <p className="text-gray-400 text-sm">{wallet.description}</p>
+                  <div className="bg-gray-800 p-3 rounded-xl">
+                    {wallet.logo}
                   </div>
+                  <div className="text-left flex-grow">
+                    <h3 className="text-white font-semibold text-lg">{wallet.name}</h3>
+                    <p className="text-gray-400 text-xs">{wallet.description}</p>
+                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    whileHover={{ opacity: 1, x: 0 }}
+                    className="text-emerald-400 opacity-0"
+                  >
+                    →
+                  </motion.div>
                 </motion.button>
               ))}
             </div>
-            <motion.button
-              onClick={onClose}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-full mt-4 bg-gray-700 text-white py-3 rounded-xl hover:bg-gray-600 transition-all"
-            >
-              Cancel
-            </motion.button>
           </motion.div>
         </motion.div>
       )}
@@ -124,14 +142,15 @@ const Navigation = () => {
   ];
 
   // Scroll effect for navbar
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+  const handleScroll = useCallback(() => {
+    setIsScrolled(window.scrollY > 50);
+  }, []);
 
+  // Scroll effect for navbar
+  useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [handleScroll]);
 
   // Close mobile menu when route changes
   useEffect(() => {
@@ -194,7 +213,8 @@ const Navigation = () => {
       x: 0,
       transition: {
         type: 'spring',
-        stiffness: 300
+        stiffness: 300,
+        delay: (index: number) => index * 0.1
       }
     }
   };
@@ -257,6 +277,7 @@ const Navigation = () => {
           <motion.button 
             onClick={() => setIsExpanded(!isExpanded)}
             whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.1}}
             className="md:hidden text-white"
           >
             {isExpanded ? <X size={24} /> : <Menu size={24} />}
@@ -280,7 +301,18 @@ const Navigation = () => {
                     key={index}
                     initial="hidden"
                     animate="visible"
-                    variants={navItemVariants}
+                    variants={{
+                      hidden: { opacity: 0, x: -50 },
+                      visible: {
+                        opacity: 1,
+                        x: 0,
+                        transition: {
+                          type: "spring",
+                          stiffness: 300,
+                          delay: index * 0.1
+                        }
+                      }
+                    }}
                     custom={index}
                     onClick={() => handleNavigation(item.path, item.isAction)}
                     className={`w-full text-left p-4 flex items-center transition-all duration-300 hover:bg-gray-800 ${

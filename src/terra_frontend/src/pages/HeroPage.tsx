@@ -1,14 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { useState, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import CTASection from '../components/CTA';
-import { Leaf, Globe, Shield, ChevronDown, Play, Pause } from 'lucide-react';
+import { Leaf, Globe, Shield, ChevronDown } from 'lucide-react';
 
 const HeroPage = () => {
   const { scrollY } = useScroll();
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
   const navigate = useNavigate();
+  const [activeFeature, setActiveFeature] = useState(null);
 
   // Advanced scroll-based transformations
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
@@ -47,8 +46,8 @@ const HeroPage = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.1,
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
       },
     },
   };
@@ -59,11 +58,10 @@ const HeroPage = () => {
     visible: (delay = 0) => ({
       opacity: 1,
       y: 0,
-      transition: { 
-        delay, 
-        duration: 0.6, 
+      transition: {
+        damping: 15,
         type: "spring", 
-        stiffness: 100 
+        stiffness: 120 
       }
     }),
     hover: { 
@@ -87,18 +85,6 @@ const HeroPage = () => {
       scale: 1.05,
       transition: { duration: 0.3 },
     },
-  };
-
-  // Video control handler
-  const toggleVideoPlayback = () => {
-    if (videoRef.current) {
-      if (isVideoPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsVideoPlaying(!isVideoPlaying);
-    }
   };
 
   return (
