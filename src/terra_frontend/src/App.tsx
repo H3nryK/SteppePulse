@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navigation from './components/Header';
 import Footer from './components/Footer';
-import HeroPage from './pages/HeroPage';
 import NFTTokensPage from './pages/NFTTokensPage';
 import MarketplacePage from './pages/MarketPlacePage';
 import AboutPage from './pages/AboutPage';
@@ -32,10 +31,9 @@ const App: React.FC = () => {
               <main className="flex-grow">
                 <AnimatePresence mode="wait">
                   <Routes>
-                    <Route path="/" element={<HeroPage />} />
+                    <Route path="/" element={<AboutPage  />} />
                     <Route path="/nft-tokens" element={<NFTTokensPage />} />
                     <Route path="/marketplace" element={<MarketplacePage />} />
-                    <Route path="/about" element={<AboutPage />} />
                     <Route path="/contact" element={<ContactPage />} />
                     <Route path='/explore' element={<Example />} />
                     <Route path="/category" element={<Categories />} />

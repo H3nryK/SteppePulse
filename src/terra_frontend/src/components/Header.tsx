@@ -132,11 +132,10 @@ const Navigation = () => {
   const location = useLocation();
 
   const navItems = [
-    { icon: Home, label: 'Home', path: '/' },
+    { icon: Info, label: 'Home', path: '/' },
     { icon: Home, label: 'Dashboard', path: '/dashboard' },
     { icon: ShoppingCart, label: 'NFT Tokens', path: '/nft-tokens' },
     { icon: TrendingUp, label: 'Marketplace', path: '/marketplace' },
-    { icon: Info, label: 'About', path: '/about' },
     { icon: Phone, label: 'Contact', path: '/contact' },
     { icon: Wallet, label: 'Connect Wallet', path: '#', isAction: true }
   ];
