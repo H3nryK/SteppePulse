@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Award, 
   Leaf, 
   Shield, 
   Globe, 
@@ -8,256 +7,275 @@ import {
   Lock, 
   Users, 
   TrendingUp, 
-  MapPin 
+  MapPin,
+  PawPrint,
+  TreeDeciduous,
+  Bird,
+  Waves,
+  BookOpen,
+  Feather
 } from 'lucide-react';
-import { 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
-  ResponsiveContainer 
-} from 'recharts';
 
-// Tokenomics Distribution Data
-const tokenomicsData = [
-  { name: 'Community Incentives', value: 40, color: '#4CAF50' },
-  { name: 'Development Fund', value: 30, color: '#2196F3' },
-  { name: 'Team Allocation', value: 20, color: '#FF9800' },
-  { name: 'Advisors & Partnerships', value: 10, color: '#9C27B0' }
+// Enhanced animal conservation data
+const wildlifeImpactData = [
+  { species: 'Elephant', progress: 35, description: 'Habitat Protection' },
+  { species: 'Tiger', progress: 45, description: 'Anti-Poaching Initiatives' },
+  { species: 'Coral Reef', progress: 25, description: 'Marine Ecosystem Restoration' },
+  { species: 'Rainforest', progress: 55, description: 'Carbon Offset Programs' }
 ];
 
-// Roadmap Progress Data
-const roadmapProgressData = [
-  { quarter: 'Q1 2025', progress: 20, milestone: 'Token Launch' },
-  { quarter: 'Q2 2025', progress: 40, milestone: 'Staking Mechanisms' },
-  { quarter: 'Q3 2025', progress: 60, milestone: 'Marketplace Launch' },
-  { quarter: 'Q4 2025', progress: 80, milestone: 'Partnerships' },
-  { quarter: '2026', progress: 100, milestone: 'Global Expansion' }
+// Tokenomics Distribution Data with animal-themed allocation
+const tokenomicsData = [
+  { name: 'Wildlife Conservation', value: 40, color: '#2ECC71', icon: PawPrint },
+  { name: 'Ecosystem Development', value: 30, color: '#3498DB', icon: TreeDeciduous },
+  { name: 'Research & Innovation', value: 20, color: '#F39C12', icon: Bird },
+  { name: 'Community Engagement', value: 10, color: '#9B59B6', icon: Waves }
 ];
 
 const StepulWhitepaper = () => {
-  const [activeSection, setActiveSection] = useState('executive-summary');
+  const [activeSection, setActiveSection] = useState('overview');
   const [animationTrigger, setAnimationTrigger] = useState(false);
-
-  useEffect(() => {
-    // Trigger animations on component mount
-    const timer = setTimeout(() => {
-      setAnimationTrigger(true);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const renderTokenomicsPieChart = () => (
-    <div className="bg-gray-800 p-6 rounded-lg shadow-xl">
-      <h3 className="text-2xl font-bold text-white mb-4">Token Distribution</h3>
-      <ResponsiveContainer width="100%" height={300}>
-        <div className="flex flex-col md:flex-row items-center justify-center">
-          <div className="w-full md:w-1/2">
-            {tokenomicsData.map((entry) => (
-              <div 
-                key={entry.name} 
-                className="flex items-center mb-2 text-white"
-              >
-                <div 
-                  className="w-4 h-4 mr-2 rounded-full" 
-                  style={{ backgroundColor: entry.color }}
-                />
-                <span>{entry.name}: {entry.value}%</span>
-              </div>
-            ))}
-          </div>
-          <div className="w-full md:w-1/2">
-            <svg viewBox="0 0 400 400" className="w-full max-w-xs">
-              {tokenomicsData.map((entry, index) => {
-                const startAngle = index === 0 ? 0 : 
-                  tokenomicsData.slice(0, index).reduce((a, b) => a + (b.value / 100 * 360), 0);
-                const endAngle = startAngle + (entry.value / 100 * 360);
-                
-                const x1 = 200 + 150 * Math.cos(startAngle * Math.PI / 180);
-                const y1 = 200 + 150 * Math.sin(startAngle * Math.PI / 180);
-                const x2 = 200 + 150 * Math.cos(endAngle * Math.PI / 180);
-                const y2 = 200 + 150 * Math.sin(endAngle * Math.PI / 180);
-                
-                return (
-                  <path
-                    key={entry.name}
-                    d={`M 200 200 L ${x1} ${y1} A 150 150 0 ${entry.value > 50 ? 1 : 0} 1 ${x2} ${y2} Z`}
-                    fill={entry.color}
-                    opacity={0.8}
-                  />
-                );
-              })}
-              <circle cx="200" cy="200" r="100" fill="rgba(0,0,0,0.5)" />
-              <text 
-                x="200" 
-                y="200" 
-                textAnchor="middle" 
-                dy=".3em" 
-                className="text-2xl font-bold text-white"
-              >
-                100M
-                <tspan x="200" dy="1.2em" className="text-sm">Total Tokens</tspan>
-              </text>
-            </svg>
-          </div>
-        </div>
-      </ResponsiveContainer>
-    </div>
-  );
-
-  const renderRoadmapTimeline = () => (
-    <div className="bg-gray-800 p-6 rounded-lg shadow-xl">
-      <h3 className="text-2xl font-bold text-white mb-6">Project Roadmap</h3>
-      <div className="relative">
-        {roadmapProgressData.map((milestone, index) => (
-          <div 
-            key={milestone.quarter} 
-            className={`flex items-center mb-4 transition-all duration-700 ${
-              animationTrigger ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
-            }`}
-            style={{ transitionDelay: `${index * 200}ms` }}
-          >
-            <div 
-              className="w-12 h-12 rounded-full flex items-center justify-center mr-4 text-white"
-              style={{ 
-                backgroundColor: `rgba(76, 175, 80, ${milestone.progress / 100})`,
-                border: '2px solid #4CAF50'
-              }}
-            >
-              {milestone.progress}%
-            </div>
-            <div>
-              <h4 className="text-xl font-semibold text-white">{milestone.quarter}</h4>
-              <p className="text-gray-300">{milestone.milestone}</p>
-            </div>
-          </div>
-        ))}
-        <div 
-          className="absolute left-[23px] top-0 bottom-0 w-1 bg-gradient-to-b from-green-500 to-blue-500"
-        />
-      </div>
-    </div>
-  );
-
-  const renderFeatureIcons = () => {
-    const features = [
-      { icon: Leaf, title: 'Conservation', description: 'Support wildlife protection' },
-      { icon: Shield, title: 'Security', description: 'Advanced cryptographic protocols' },
-      { icon: Globe, title: 'Interoperability', description: 'Cross-blockchain connectivity' },
-      { icon: Zap, title: 'Performance', description: 'High-speed transactions' }
-    ];
-
-    return (
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {features.map((feature) => (
-          <div 
-            key={feature.title}
-            className="bg-gray-700 p-4 rounded-lg text-center transition-transform hover:scale-105"
-          >
-            <feature.icon className="mx-auto mb-3 text-green-400" size={48} />
-            <h4 className="text-xl font-bold text-white mb-2">{feature.title}</h4>
-            <p className="text-gray-300">{feature.description}</p>
-          </div>
-        ))}
-      </div>
-    );
+  const sectionRefs = {
+    overview: useRef(null),
+    tokenomics: useRef(null),
+    impact: useRef(null),
+    roadmap: useRef(null)
   };
 
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-fade-in-up');
+        }
+      });
+    }, observerOptions);
+
+    // Observe all section refs
+    Object.values(sectionRefs).forEach(ref => {
+      if (ref.current) observer.observe(ref.current);
+    });
+
+    // Trigger initial animations
+    const animationTimer = setTimeout(() => {
+      setAnimationTrigger(true);
+    }, 500);
+
+    return () => {
+      clearTimeout(animationTimer);
+      Object.values(sectionRefs).forEach(ref => {
+        if (ref.current) observer.unobserve(ref.current);
+      });
+    };
+  }, []);
+
+  const WildlifeImpactSection = () => (
+    <section ref={sectionRefs.impact} className="bg-gray-800 p-6 rounded-lg">
+      <h2 className="text-3xl font-bold mb-6 text-green-400 flex items-center">
+        <Feather className="mr-3 text-green-500" />
+        Wildlife Impact Tracker
+      </h2>
+      <div className="grid md:grid-cols-2 gap-4">
+        {wildlifeImpactData.map((project, index) => (
+          <div 
+            key={project.species} 
+            className="bg-gray-700 p-4 rounded-lg transform transition-all hover:scale-105"
+          >
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-xl font-semibold text-white">{project.species}</h3>
+              <span className="text-green-400 font-bold">{project.progress}%</span>
+            </div>
+            <div className="w-full bg-gray-600 rounded-full h-2.5">
+              <div 
+                className="bg-green-500 h-2.5 rounded-full" 
+                style={{ width: `${project.progress}%` }}
+              />
+            </div>
+            <p className="text-gray-300 mt-2">{project.description}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+
+  const TokenomicsSection = () => (
+    <section ref={sectionRefs.tokenomics} className="bg-gray-800 p-6 rounded-lg">
+      <h2 className="text-3xl font-bold mb-6 text-green-400 flex items-center">
+        <BookOpen className="mr-3 text-blue-500" />
+        Tokenomics Breakdown
+      </h2>
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Token Distribution Visualization */}
+        <div className="bg-gray-700 p-4 rounded-lg">
+          <h3 className="text-xl font-semibold text-white mb-4">Token Allocation</h3>
+          <div className="space-y-3">
+            {tokenomicsData.map((allocation) => {
+              const Icon = allocation.icon;
+              return (
+                <div 
+                  key={allocation.name} 
+                  className="flex items-center space-x-3 bg-gray-600 p-3 rounded-lg"
+                >
+                  <Icon className="text-white" size={24} />
+                  <div className="flex-grow">
+                    <div className="flex justify-between text-white">
+                      <span>{allocation.name}</span>
+                      <span>{allocation.value}%</span>
+                    </div>
+                    <div 
+                      className="h-2 rounded-full mt-1" 
+                      style={{ 
+                        width: `${allocation.value}%`, 
+                        backgroundColor: allocation.color 
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        
+        {/* Total Supply Visualization */}
+        <div className="bg-gray-700 p-4 rounded-lg flex flex-col items-center justify-center">
+          <svg viewBox="0 0 200 200" className="w-full max-w-xs">
+            <circle cx="100" cy="100" r="90" fill="rgba(0,0,0,0.3)" />
+            <text 
+              x="100" 
+              y="100" 
+              textAnchor="middle" 
+              className="text-3xl font-bold fill-white"
+              dy=".3em"
+            >
+              100M
+              <tspan 
+                x="100" 
+                dy="1.5em" 
+                className="text-base fill-gray-300"
+              >
+                Total Tokens
+              </tspan>
+            </text>
+          </svg>
+          <p className="text-gray-300 text-center mt-4">
+            Carefully allocated to maximize conservation impact
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+
   return (
-    <div className="bg-gray-900 text-white min-h-screen px-4 pt-20 md:p-10">
+    <div className="bg-gray-900 text-white min-h-screen p-4 md:p-10">
       <div className="max-w-6xl mx-auto">
-        {/* Header Section */}
-        <header className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
-            Stepul Coin
+        {/* Header */}
+        <header className="text-center mb-12 animate-fade-in">
+          <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
+            Stepul
           </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Decentralized Ecosystem for Wildlife Conservation
+            Blockchain-Powered Wildlife Conservation
           </p>
         </header>
 
         {/* Navigation */}
         <nav className="mb-10 flex flex-wrap justify-center gap-4">
           {[
-            { id: 'executive-summary', label: 'Overview' },
-            { id: 'tokenomics', label: 'Tokenomics' },
-            { id: 'technology', label: 'Technology' },
-            { id: 'roadmap', label: 'Roadmap' }
+            { id: 'overview', label: 'Overview', icon: Globe },
+            { id: 'tokenomics', label: 'Tokenomics', icon: Lock },
+            { id: 'impact', label: 'Wildlife Impact', icon: PawPrint },
+            { id: 'roadmap', label: 'Roadmap', icon: TrendingUp }
           ].map((section) => (
             <button
               key={section.id}
               onClick={() => setActiveSection(section.id)}
-              className={`px-4 py-2 rounded-full transition-all ${
-                activeSection === section.id 
+              className={`
+                flex items-center px-4 py-2 rounded-full transition-all 
+                ${activeSection === section.id 
                   ? 'bg-green-500 text-white' 
                   : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-              }`}
+                }
+              `}
             >
+              <section.icon className="mr-2" size={20} />
               {section.label}
             </button>
           ))}
         </nav>
 
-        {/* Content Sections */}
+        {/* Dynamic Content Sections */}
         <div className="space-y-10">
-          {activeSection === 'executive-summary' && (
-            <section>
-              <h2 className="text-3xl font-bold mb-6 text-green-400">Project Overview</h2>
-              {renderFeatureIcons()}
-              <div className="bg-gray-800 p-6 rounded-lg mt-6">
-                <p className="text-lg text-gray-300">
-                  Stepul is a visionary cryptocurrency leveraging the Internet Computer (ICP) 
-                  blockchain to build a decentralized ecosystem dedicated to wildlife conservation. 
-                  With a fixed supply of 100 million tokens, we integrate cutting-edge blockchain 
-                  technology to enable seamless digital asset management while championing 
-                  ecological sustainability.
-                </p>
-              </div>
-            </section>
-          )}
-
-          {activeSection === 'tokenomics' && (
-            <section>
-              <h2 className="text-3xl font-bold mb-6 text-green-400">Tokenomics</h2>
-              {renderTokenomicsPieChart()}
-            </section>
-          )}
-
-          {activeSection === 'technology' && (
-            <section>
-              <h2 className="text-3xl font-bold mb-6 text-green-400">Technology Overview</h2>
+          {activeSection === 'overview' && (
+            <section ref={sectionRefs.overview} className="bg-gray-800 p-6 rounded-lg">
+              <h2 className="text-3xl font-bold mb-6 text-green-400 flex items-center">
+                <TreeDeciduous className="mr-3 text-green-500" />
+                Our Mission
+              </h2>
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-gray-800 p-6 rounded-lg">
-                  <h3 className="text-2xl font-semibold text-white mb-4">
-                    <Lock className="inline mr-2 text-green-400" />
-                    Security
-                  </h3>
-                  <p className="text-gray-300">
-                    Implements advanced cryptographic protocols to protect user data 
-                    and ensure transaction integrity on the ICP blockchain.
+                <div>
+                  <p className="text-lg text-gray-300">
+                    Stepul combines cutting-edge blockchain technology with a passionate 
+                    commitment to wildlife conservation. By leveraging the Internet Computer 
+                    (ICP) blockchain, we create a transparent, efficient ecosystem that 
+                    directly supports global conservation efforts.
                   </p>
                 </div>
-                <div className="bg-gray-800 p-6 rounded-lg">
-                  <h3 className="text-2xl font-semibold text-white mb-4">
-                    <TrendingUp className="inline mr-2 text-blue-400" />
-                    Scalability
-                  </h3>
-                  <p className="text-gray-300">
-                    Efficiently handles thousands of transactions per second, 
-                    supporting a growing global user base with high-performance infrastructure.
-                  </p>
+                <div className="flex items-center justify-center">
+                  <svg 
+                    viewBox="0 0 300 200" 
+                    className="w-full max-w-md animate-pulse"
+                  >
+                    <path 
+                      d="M50 100 Q150 20, 250 100 T450 100" 
+                      fill="none" 
+                      stroke="#4CAF50" 
+                      strokeWidth="3"
+                    />
+                    <circle cx="150" cy="100" r="10" fill="#2ECC71" />
+                    <circle cx="250" cy="100" r="10" fill="#27AE60" />
+                  </svg>
                 </div>
               </div>
             </section>
           )}
 
+          {activeSection === 'tokenomics' && <TokenomicsSection />}
+          {activeSection === 'impact' && <WildlifeImpactSection />}
           {activeSection === 'roadmap' && (
-            <section>
-              <h2 className="text-3xl font-bold mb-6 text-green-400">Project Roadmap</h2>
-              {renderRoadmapTimeline()}
+            <section ref={sectionRefs.roadmap} className="bg-gray-800 p-6 rounded-lg">
+              <h2 className="text-3xl font-bold mb-6 text-green-400 flex items-center">
+                <MapPin className="mr-3 text-blue-500" />
+                Project Milestones
+              </h2>
+              <div className="relative">
+                {[
+                  { quarter: 'Q1 2025', milestone: 'Platform Launch', icon: Zap },
+                  { quarter: 'Q3 2025', milestone: 'Conservation Partnerships', icon: Users },
+                  { quarter: 'Q1 2026', milestone: 'Global Expansion', icon: Globe }
+                ].map((item, index) => {
+                  const Icon = item.icon;
+                  return (
+                    <div 
+                      key={item.quarter}
+                      className="flex items-center mb-6 transform transition-all hover:scale-105"
+                    >
+                      <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mr-4">
+                        <Icon className="text-green-400" size={32} />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-white">{item.quarter}</h3>
+                        <p className="text-gray-300">{item.milestone}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </section>
           )}
         </div>
@@ -265,12 +283,12 @@ const StepulWhitepaper = () => {
         {/* Footer */}
         <footer className="mt-12 text-center">
           <div className="flex justify-center space-x-4 mb-6">
-            <Users className="text-green-400" size={32} />
-            <MapPin className="text-blue-400" size={32} />
-            <Award className="text-yellow-400" size={32} />
+            <PawPrint className="text-green-400 animate-bounce" size={32} />
+            <TreeDeciduous className="text-blue-400 animate-pulse" size={32} />
+            <Bird className="text-yellow-400 animate-spin" size={32} />
           </div>
           <p className="text-gray-400">
-            © 2024 Stepul Coin. Decentralizing Conservation, One Token at a Time.
+            © 2024 Stepul. Empowering Conservation Through Blockchain.
           </p>
         </footer>
       </div>
@@ -279,3 +297,25 @@ const StepulWhitepaper = () => {
 };
 
 export default StepulWhitepaper;
+
+// Add custom animations to Tailwind config
+const tailwindConfig = {
+  theme: {
+    extend: {
+      animation: {
+        'fade-in': 'fadeIn 0.5s ease-out',
+        'fade-in-up': 'fadeInUp 0.7s ease-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        }
+      }
+    }
+  }
+};
