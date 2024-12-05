@@ -12,6 +12,8 @@ import {
   PawPrint,
   Bird,
   Mountain,
+  Turtle,
+  TreePine,
 } from 'lucide-react';
 import { FaWhatsapp, FaTelegram, FaInstagram } from "react-icons/fa";
 import { RiTwitterXFill } from "react-icons/ri";
@@ -112,6 +114,37 @@ const AboutPage = () => {
     },
   ];
 
+  const ecosystemData = [
+    {
+      icon: Turtle,
+      title: 'Marine Conservation',
+      description: 'Protecting ocean biodiversity through blockchain-powered initiatives',
+      color: 'text-teal-400',
+      background: 'bg-blue-900/20'
+    },
+    {
+      icon: TreePine,
+      title: 'Forest Preservation',
+      description: 'Securing critical forest habitats and supporting reforestation efforts',
+      color: 'text-green-400',
+      background: 'bg-green-900/20'
+    },
+    {
+      icon: Mountain,
+      title: 'Alpine Ecosystem',
+      description: 'Safeguarding high-altitude wildlife and fragile mountain environments',
+      color: 'text-indigo-400',
+      background: 'bg-indigo-900/20'
+    },
+    {
+      icon: Bird,
+      title: 'Migratory Pathways',
+      description: 'Tracking and protecting critical migration routes for endangered species',
+      color: 'text-sky-400',
+      background: 'bg-sky-900/20'
+    }
+  ];
+
   // Enhanced animation variants
   const variants = {
     hidden: { opacity: 0, y: 50 },
@@ -154,6 +187,7 @@ const AboutPage = () => {
   const [faqRef, faqInView] = createInViewHook();
   
   const [activeAnimal, setActiveAnimal] = useState(null);
+  const [activeEcosystem, setActiveEcosystem] = useState(null); 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -196,7 +230,7 @@ const AboutPage = () => {
           transition={{ duration: 1.5 }}
         >
           <motion.img
-            src="/images/bg-8.jpg"
+            src="/images/rhino.jpg"
             alt="Wildlife Conservation"
             className="w-full h-full object-cover opacity-30"
           />
@@ -259,33 +293,105 @@ const AboutPage = () => {
       </motion.div>
 
       {/* About the Project */}
-      <motion.div
-        ref={aboutRef}
-        initial="hidden"
-        animate={aboutInView ? "visible" : "hidden"}
-        className="container mx-auto px-4 py-20 bg-gray-900/50"
+      <motion.div 
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="container mx-auto px-20 py-20 bg-gray-900/50"
       >
         <motion.h2
-          variants={variants}
-          custom={0.3}
-          className="text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 mb-12"
+          className="text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 mb-16"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.6 }}
         >
-          About Our Mission
+          Our Holistic Conservation Approach
         </motion.h2>
-        <motion.div
-          variants={variants}
-          custom={0.5}
-          className="max-w-4xl mx-auto text-center text-gray-300 text-lg leading-relaxed space-y-6"
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <motion.div
+            className="space-y-6 text-gray-300 text-lg leading-relaxed"
+            initial={{ x: -50, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <p>
+              We're pioneering a revolutionary intersection of blockchain technology and wildlife conservation. 
+              Our mission transcends traditional boundaries, creating a dynamic ecosystem where digital innovation 
+              directly supports environmental preservation.
+            </p>
+            <p>
+              By leveraging NFT technology, we transform digital assets into powerful conservation tools, 
+              connecting passionate global citizens with critical environmental challenges.
+            </p>
+            <p>
+              Each digital token represents more than a collectible – it's a direct lifeline to protecting 
+              biodiversity, empowering local communities, and creating measurable impact.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-2 gap-4">
+            {ecosystemData.map((ecosystem, index) => (
+              <motion.div
+                key={index}
+                onHoverStart={() => setActiveEcosystem(ecosystem.title)}
+                onHoverEnd={() => setActiveEcosystem(null)}
+                whileHover={{ scale: 1.05 }}
+                className={`
+                  p-6 rounded-2xl transition-all duration-300 
+                  ${activeEcosystem === ecosystem.title 
+                    ? `${ecosystem.background} border-2 border-emerald-500` 
+                    : 'bg-gray-800/30'}
+                  cursor-pointer
+                `}
+              >
+                <div className="flex items-center mb-4">
+                  <ecosystem.icon 
+                    className={`w-10 h-10 mr-4 ${ecosystem.color} 
+                      ${activeEcosystem === ecosystem.title ? 'animate-pulse' : ''}
+                    `} 
+                  />
+                  <h3 className="text-xl font-bold text-gray-200">
+                    {ecosystem.title}
+                  </h3>
+                </div>
+                <p className="text-gray-400 text-sm">
+                  {ecosystem.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Animated Background Elements */}
+        <motion.div 
+          className="absolute left-0 top-1/3 opacity-20"
+          animate={{ 
+            x: [0, 20, -20, 0],
+            rotate: [0, 10, -10, 0]
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            repeatType: "loop"
+          }}
         >
-          <p>
-            We are pioneering a revolutionary approach to wildlife conservation by leveraging the power of blockchain technology and NFTs. Our mission is to create a sustainable ecosystem where digital innovation meets environmental preservation.
-          </p>
-          <p>
-            By connecting passionate individuals with critical conservation efforts, we aim to transform how we protect and support the world's most vulnerable wildlife habitats and species.
-          </p>
-          <p>
-            Every digital asset we create represents more than just a token – it's a direct lifeline to protecting biodiversity, supporting local communities, and creating a lasting impact on our planet's future.
-          </p>
+          <Leaf className="w-64 h-64 text-green-300" />
+        </motion.div>
+        
+        <motion.div 
+          className="absolute right-0 bottom-1/3 opacity-20"
+          animate={{ 
+            x: [-20, 0, -20],
+            y: [0, 30, -30, 0]
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            repeatType: "loop"
+          }}
+        >
+          <PawPrint className="w-48 h-48 text-blue-300" />
         </motion.div>
       </motion.div>
 
