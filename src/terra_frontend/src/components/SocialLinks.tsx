@@ -14,22 +14,22 @@ interface SocialLinksProps {
 const socialLinks = [
   {
     name: 'X (Twitter)',
-    url: 'https://twitter.com/terrapulse',
+    url: 'https://x.com/steppepulse',
     icon: RiTwitterXFill,
   },
   {
     name: 'Whatsapp Channel',
-    url: 'https://discord.gg/terrapulse',
+    url: 'https://whatsapp.com/channel/0029VasrR7A35fLvuli9qG0m',
     icon: FaWhatsapp,
   },
   {
     name: 'Instagram',
-    url: 'https://instagram.com/terrapulse',
+    url: 'https://www.instagram.com/steppe_pulse',
     icon: FaInstagram,
   },
   {
     name: 'Telegram',
-    url: 'https://instagram.com/terrapulse',
+    url: 'https://t.me/+dCItpVFGdC81ZTVk',
     icon: FaTelegram,
   }
 ];

@@ -7,6 +7,11 @@ import {
   Shield, 
   Users, 
   MessageCircle,
+  Feather,
+  Leaf,
+  PawPrint,
+  Bird,
+  Mountain,
 } from 'lucide-react';
 import { FaWhatsapp, FaTelegram, FaInstagram } from "react-icons/fa";
 import { RiTwitterXFill } from "react-icons/ri";
@@ -72,31 +77,39 @@ const AboutPage = () => {
     }
   ];
 
-  const socialLinks = [
+  const socialPlatforms = [
     { 
       icon: FaTelegram, 
       name: 'Telegram', 
-      url: 'https://t.me/yourchannellink',
-      color: 'text-blue-400'
+      url: 'https://t.me/+dCItpVFGdC81ZTVk',
+      color: 'text-blue-400',
+      animal: Bird,
+      description: 'Swift communication like a soaring eagle'
     },
     { 
       icon: RiTwitterXFill, 
       name: 'X (Twitter)', 
-      url: 'https://twitter.com/yourhandle',
-      color: 'text-white'
+      url: 'https://x.com/steppepulse',
+      color: 'text-white',
+      animal: PawPrint,
+      description: 'Tracking our conservation journey'
     },
     { 
       icon: FaWhatsapp, 
       name: 'WhatsApp', 
-      url: 'https://wa.me/yournumber',
-      color: 'text-green-500'
+      url: 'https://whatsapp.com/channel/0029VasrR7A35fLvuli9qG0m',
+      color: 'text-green-500',
+      animal: Leaf,
+      description: 'Growing our green community'
     },
     { 
       icon: FaInstagram, 
       name: 'Instagram', 
-      url: 'https://instagram.com/yourprofile',
-      color: 'text-pink-500'
-    }
+      url: 'https://www.instagram.com/steppe_pulse',
+      color: 'text-pink-500',
+      animal: Mountain,
+      description: "Capturing nature's breathtaking moments"
+    },
   ];
 
   // Enhanced animation variants
@@ -139,6 +152,8 @@ const AboutPage = () => {
   const [teamRef, teamInView] = createInViewHook();
   const [contactRef, contactInView] = createInViewHook();
   const [faqRef, faqInView] = createInViewHook();
+  
+  const [activeAnimal, setActiveAnimal] = useState(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -275,33 +290,84 @@ const AboutPage = () => {
       </motion.div>
 
       {/* Socials */}
-      <motion.div
-        initial="hidden"
-        animate="visible"
+      <motion.div 
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
         className="container mx-auto px-4 py-20"
       >
         <motion.h2
-          variants={variants}
-          custom={0.3}
           className="text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 mb-12"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.6 }}
         >
-          Connect With Us
+          Join Our Wildlife Conservation Journey
         </motion.h2>
-        <div className="flex justify-center space-x-8">
-          {socialLinks.map((social, index) => (
-            <motion.a
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {socialPlatforms.map((platform, index) => (
+            <motion.div
               key={index}
-              href={social.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              variants={variants}
-              custom={index * 0.2}
-              whileHover="hover"
-              className={`${social.color} hover:scale-110 transition-transform duration-300`}
+              whileHover={{ 
+                scale: 1.05,
+                rotate: [0, 5, -5, 0],
+                transition: { duration: 0.3 }
+              }}
+              onHoverStart={() => setActiveAnimal(platform.name)}
+              onHoverEnd={() => setActiveAnimal(null)}
+              className="relative group"
             >
-              <social.icon className="w-12 h-12" />
-              <span className="sr-only">{social.name}</span>
-            </motion.a>
+              <motion.a
+                href={platform.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block relative"
+              >
+                <div className={`
+                  w-full h-64 flex flex-col items-center justify-center 
+                  rounded-2xl border-2 border-transparent 
+                  bg-gray-800/50 backdrop-blur-sm 
+                  transition-all duration-300
+                  ${activeAnimal === platform.name 
+                    ? 'border-emerald-500 shadow-2xl shadow-emerald-500/30' 
+                    : 'hover:border-emerald-500/50'
+                  }
+                `}>
+                  <motion.div 
+                    className={`
+                      mb-4 ${platform.color} 
+                      transition-all duration-300 
+                      group-hover:scale-125
+                    `}
+                  >
+                    <platform.icon className="w-16 h-16" />
+                  </motion.div>
+                  
+                  <h3 className="text-xl font-bold text-gray-200 mb-2">
+                    {platform.name}
+                  </h3>
+                  
+                  <p className="text-gray-400 text-center px-4">
+                    {platform.description}
+                  </p>
+                </div>
+              </motion.a>
+              
+              {activeAnimal === platform.name && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute -top-16 left-1/2 -translate-x-1/2 
+                    bg-gray-900/80 backdrop-blur-sm 
+                    rounded-full p-4 
+                    shadow-2xl shadow-emerald-500/30"
+                >
+                  <platform.animal className="w-12 h-12 text-emerald-400" />
+                </motion.div>
+              )}
+            </motion.div>
           ))}
         </div>
       </motion.div>
@@ -346,100 +412,141 @@ const AboutPage = () => {
         </div>
       </motion.div>
       
-            {/* Contact Section */}
-            <motion.div
-        ref={contactRef}
+      {/* Contact Section */}
+      <motion.div 
         initial="hidden"
-        animate={contactInView ? "visible" : "hidden"}
-        className="container mx-auto px-4 py-20 bg-gray-900/50"
+        animate="visible"
+        className="container mx-auto p-20 flex flex-col md:flex-row gap-12"
       >
-        <motion.h2
+        {/* Contact Section - Left Side */}
+        <motion.div 
           variants={variants}
           custom={0.3}
-          className="text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 mb-12"
+          className="w-full md:w-1/2 relative"
         >
-          Get In Touch
-        </motion.h2>
-        <div className="max-w-xl mx-auto bg-gray-800/50 p-8 rounded-2xl">
-          <form className="space-y-6">
-            <div>
-              <label htmlFor="name" className="block text-gray-300 mb-2">Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-                className="w-full bg-gray-700 text-gray-200 border-none rounded-lg p-3 focus:ring-2 focus:ring-emerald-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="block text-gray-300 mb-2">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-                className="w-full bg-gray-700 text-gray-200 border-none rounded-lg p-3 focus:ring-2 focus:ring-emerald-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="message" className="block text-gray-300 mb-2">Message</label>
-              <textarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleInputChange}
-                required
-                rows={4}
-                className="w-full bg-gray-700 text-gray-200 border-none rounded-lg p-3 focus:ring-2 focus:ring-emerald-500"
-              ></textarea>
-            </div>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              type="submit"
-              className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-3 rounded-lg hover:from-green-500 hover:to-blue-600 transition-all duration-300"
-            >
-              Send Message
-            </motion.button>
-          </form>
-        </div>
-      </motion.div>
-
-      {/* FAQs Section */}
-      <motion.div
-        ref={faqRef}
-        initial="hidden"
-        animate={faqInView ? "visible" : "hidden"}
-        className="container mx-auto px-4 py-20"
-      >
-        <motion.h2
-          variants={variants}
-          custom={0.3}
-          className="text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 mb-12"
-        >
-          Frequently Asked Questions
-        </motion.h2>
-        <div className="max-w-3xl mx-auto space-y-6">
-          {faqs.map((faq, index) => (
-            <motion.div
-              key={index}
-              variants={variants}
-              custom={index * 0.2}
-              className="bg-gray-800/50 rounded-2xl p-6"
-            >
-              <div className="flex items-center mb-4">
-                <MessageCircle className="w-6 h-6 text-green-400 mr-3" />
-                <h3 className="text-xl font-semibold text-green-300">{faq.question}</h3>
+          <motion.div 
+            className="absolute -top-10 -left-10 z-0"
+            animate={{ 
+              rotate: [0, 10, -10, 0],
+              scale: [1, 1.1, 0.9, 1]
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              repeatType: "loop"
+            }}
+          >
+            <Leaf className="w-24 h-24 text-green-300/30" />
+          </motion.div>
+          
+          <motion.div 
+            className="relative z-10 bg-gray-800/50 backdrop-blur-sm p-8 rounded-2xl"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 mb-8">
+              Get In Touch
+            </h2>
+            <form className="space-y-6">
+              <div>
+                <label htmlFor="name" className="block text-gray-300 mb-2">Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full bg-gray-700 text-gray-200 border-none rounded-lg p-3 focus:ring-2 focus:ring-emerald-500"
+                />
               </div>
-              <p className="text-gray-400">{faq.answer}</p>
-            </motion.div>
-          ))}
-        </div>
+              <div>
+                <label htmlFor="email" className="block text-gray-300 mb-2">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full bg-gray-700 text-gray-200 border-none rounded-lg p-3 focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+              <div>
+                <label htmlFor="message" className="block text-gray-300 mb-2">Message</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  required
+                  rows={4}
+                  className="w-full bg-gray-700 text-gray-200 border-none rounded-lg p-3 focus:ring-2 focus:ring-emerald-500"
+                ></textarea>
+              </div>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                type="submit"
+                className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold py-3 rounded-lg hover:from-green-500 hover:to-blue-600 transition-all duration-300"
+              >
+                Send Message
+              </motion.button>
+            </form>
+          </motion.div>
+        </motion.div>
+
+        {/* FAQs Section - Right Side */}
+        <motion.div 
+          variants={variants}
+          custom={0.5}
+          className="w-full md:w-1/2 relative"
+        >
+          <motion.div 
+            className="absolute -top-10 -right-10 z-0"
+            animate={{ 
+              x: [0, 20, -20, 0],
+              rotate: [0, 15, -15, 0]
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              repeatType: "loop"
+            }}
+          >
+            <Feather className="w-24 h-24 text-blue-300/30" />
+          </motion.div>
+
+          <motion.div 
+            className="relative z-10"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 mb-8">
+              Frequently Asked Questions
+            </h2>
+            <div className="space-y-6">
+              {faqs.map((faq, index) => (
+                <motion.div
+                  key={index}
+                  variants={variants}
+                  custom={index * 0.2}
+                  className="bg-gray-800/50 rounded-2xl p-6"
+                  whileHover={{ 
+                    scale: 1.05,
+                    backgroundColor: 'rgba(31, 41, 55, 0.6)'
+                  }}
+                >
+                  <div className="flex items-center mb-4">
+                    <MessageCircle className="w-6 h-6 text-green-400 mr-3" />
+                    <h3 className="text-xl font-semibold text-green-300">{faq.question}</h3>
+                  </div>
+                  <p className="text-gray-400">{faq.answer}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
       </motion.div>
     </motion.div>
   );

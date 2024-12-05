@@ -13,11 +13,7 @@
     },
     "terra_backend": {
       "main": "src/terra_backend/main.mo",
-      "type": "motoko",
-      "id": {
-        "local": "rrkah-fqaaa-aaaaa-aaaaq-cai",
-        "ic": "ryjl3-tyaaa-aaaaa-aaaba-cai"
-      }
+      "type": "motoko"
     },
     "terra_frontend": {
       "dependencies": [

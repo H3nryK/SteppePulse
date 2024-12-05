@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { AuthClient } from '@dfinity/auth-client';
 import { createActor } from './Actor';
+import { terra_backend } from '../../../declarations/terra_backend';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -56,7 +57,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const fetchUserProfile = async (principalId: string) => {
     try {
       const backend = createActor(principalId);
+      console.log("Backend: ", backend);
+
       const profile = await backend.getUserProfile();
+      console.log("Profile: ", profile);
       
       if (profile) {
         setUserProfile(profile as UserProfile);

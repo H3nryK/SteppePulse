@@ -20,7 +20,7 @@ type BackendResult =
   | { ok: false; error: string };
 
 const AppContent: React.FC = () => {
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const { isAuthenticated, principal, userProfile, login } = useAuth();
   const [OnBoardingModal, setOnBoardingModal] = useState(false);
 
