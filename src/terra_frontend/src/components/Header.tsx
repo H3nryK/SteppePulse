@@ -16,7 +16,7 @@ import {
 import { useAuth } from '../services/AuthContext';
 
 // Wallet Connection Modal Component
-const WalletConnectionModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+const WalletConnectionModal = ({ isOpen, onClose }) => {
   const { login } = useAuth();
 
   const walletOptions = [
@@ -234,7 +234,7 @@ const Navigation = () => {
             {combinedNavItems.map((item, index) => (
               <motion.button
                 key={index}
-                onClick={() => handleNavigation(item.path)}
+                onClick={() => handleNavigation(item.path, item.isAction)}
                 whileHover={{ 
                   scale: 1.1,
                   rotateY: 10
@@ -293,7 +293,7 @@ const Navigation = () => {
                       }
                     }}
                     custom={index}
-                    onClick={() => handleNavigation(item.path)}
+                    onClick={() => handleNavigation(item.path, item.isAction)}
                     className={`w-full text-left p-4 flex items-center transition-all duration-300 hover:bg-gray-800 ${
                       location.pathname === item.path
                         ? 'bg-gray-800 text-emerald-400'
