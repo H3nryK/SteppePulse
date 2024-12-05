@@ -12,6 +12,7 @@ import Categories from './pages/Categories';
 import ConservationDashboard from './pages/Dashboard';
 import { AuthProvider, useAuth } from './services/AuthContext';
 import UserOnboardingModal from './components/UserOnBoarding';
+import StepulWhitePaper from './pages/Whitepaper';
 import { createActor } from '../../declarations/terra_backend';
 
 // Define a type for the backend result that matches the actual return type
@@ -72,6 +73,7 @@ const AppContent: React.FC = () => {
             <Route path="/nft-tokens" element={isAuthenticated ? <NFTTokensPage /> : <Navigate to="/" />} />
             <Route path="/marketplace" element={isAuthenticated ? <MarketplacePage /> : <Navigate to="/" />} />
             <Route path="/" element={<AboutPage />} />
+            <Route path="/whitepaper" element={<StepulWhitePaper />} />
             <Route path="/example" element={<Example />} />
             <Route path="/categories" element={isAuthenticated ? <Categories /> : <Navigate to="/" />} />
             <Route path="/dashboard" element={isAuthenticated ? <ConservationDashboard /> : <Navigate to="/" />} />

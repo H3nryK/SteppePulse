@@ -1,8 +1,8 @@
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { idlFactory } from '../../../declarations/terra_backend';
 
-export function createActor(pricipalId, options = {}) {
-  const agent = new HttpAgent(options.agentOptions);
+export function createActor(identity) {
+  const agent = new HttpAgent({identity});
 
   // Fetch root key for local replica
   if (process.env.NODE_ENV === "development") {
@@ -11,6 +11,6 @@ export function createActor(pricipalId, options = {}) {
 
   return Actor.createActor(idlFactory, {
     agent,
-    canisterId: process.env.CANISTER_ID,
+    canisterId: 'bkyz2-fmaaa-aaaaa-qaaaq-cai',
   });
 }

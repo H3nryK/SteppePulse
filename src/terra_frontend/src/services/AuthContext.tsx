@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import { AuthClient } from '@dfinity/auth-client';
 import { createActor } from './Actor';
 import { terra_backend } from '../../../declarations/terra_backend';
+import { Principal } from '@dfinity/principal';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -59,7 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const backend = createActor(principalId);
       console.log("Backend: ", backend);
 
-      const profile = await backend.getUserProfile();
+      const profile = await backend.getUserProfile(Principal.fromText(principalId));
       console.log("Profile: ", profile);
       
       if (profile) {
@@ -76,7 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const options = {
       identityProvider: 
         provider === 'internet-identity' 
-          ? "https://identity.ic0.app/#authorize" 
+          ? "http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:4943/" 
           : "https://nfid.one/authenticate"
     };
 
@@ -85,15 +86,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         ...options,
         onSuccess: async () => {
           const identity = authClient.getIdentity();
+
           const principalId = identity.getPrincipal().toString();
           
           setPrincipal(principalId);
           setIsAuthenticated(true);
 
           // Check if user profile exists
-          const backend = createActor(principalId);
+          const backend = createActor(identity);
+          console.log("Backend: ", backend);
+
           try {
-            const profile = await backend.getUserProfile();
+            const profile = await backend.getUserProfile(Principal.fromText(principalId));
+            console.log("Profile on Auth: ", profile);  
             
             if (profile) {
               setUserProfile(profile as UserProfile);
