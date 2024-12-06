@@ -9,11 +9,11 @@ import MarketplacePage from './pages/MarketPlacePage';
 import AboutPage from './pages/AboutPage';
 import Example from './components/Example';
 import Categories from './pages/Categories';
-import ConservationDashboard from './pages/Dashboard.tsx';
+import ConservationDashboard from './pages/Dashboard';
 import { AuthProvider, useAuth } from './services/AuthContext';
 import UserOnboardingModal from './components/UserOnBoarding';
 import StepulWhitePaper from './pages/Whitepaper';
-import { createActor } from '../../declarations/terra_backend';
+import { terra_backend } from '../../declarations/terra_backend';
 
 // Define type for profile creation result
 type ProfileCreationResult = {
@@ -68,10 +68,15 @@ const AppContent: React.FC = () => {
 
     try {
       // Create the backend actor
-      const backend = createActor(principal);
+      // const backend = createActor(principal);
 
-      // Attempt to create user profile
-      const result = await backend.createUserProfile(username);
+      // // Attempt to create user profile
+      // const result = await backend.createUserProfile(username);
+
+      const principal = await terra_backend.whoami();
+      console.log("Pricipal: ", principal);
+
+      const result = await terra_backend.createUserProfile(username);
       console.log("Profile creation result:", result);
 
       // Comprehensive result handling

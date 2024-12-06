@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Heart, Share2, Info } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Heart, Share2, Info, Plus, X, Image as ImageIcon } from 'lucide-react';
 
 const WildlifeNFTCollection = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [liked, setLiked] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNFTGalleryOpen, setIsNFTGalleryOpen] = useState(false);
+  const [mintedNFTs, setMintedNFTs] = useState([]);
 
   const product = {
     name: 'Wildlife Conservation NFT Collection',
@@ -21,6 +24,18 @@ const WildlifeNFTCollection = () => {
       { metric: 'Species Supported', value: '12' },
       { metric: 'Funds Raised', value: '$250,000+' }
     ]
+  };
+
+  const handleMintNFT = () => {
+    if (mintedNFTs.length < product.images.length) {
+      const newNFT = product.images[mintedNFTs.length];
+      setMintedNFTs([...mintedNFTs, newNFT]);
+    }
+  };
+
+  const openImageModal = (index) => {
+    setSelectedImage(index);
+    setIsModalOpen(true);
   };
 
   return (
@@ -54,7 +69,8 @@ const WildlifeNFTCollection = () => {
             <img 
               src={product.images[selectedImage].src} 
               alt={product.images[selectedImage].alt}
-              className="w-full rounded-xl shadow-2xl object-cover max-h-[600px]"
+              onClick={() => openImageModal(selectedImage)}
+              className="w-full rounded-xl shadow-2xl object-cover max-h-[600px] cursor-pointer"
             />
             <div className="absolute top-4 right-4 flex space-x-4">
               <motion.button 
@@ -130,18 +146,111 @@ const WildlifeNFTCollection = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-green-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-green-700 transition"
+            onClick={() => setIsNFTGalleryOpen(true)}
+            className="bg-green-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-green-700 transition flex items-center"
           >
-            Purchase NFT
+            <ImageIcon className="mr-2" /> My NFT Gallery
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-700 transition"
+            onClick={handleMintNFT}
+            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-700 transition flex items-center"
           >
-            Learn More
+            <Plus className="mr-2" /> Mint NFT
           </motion.button>
         </div>
+
+        {/* Image Modal */}
+        <AnimatePresence>
+          {isModalOpen && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 p-4"
+            >
+              <motion.div
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.9 }}
+                className="relative max-w-4xl w-full max-h-[90vh]"
+              >
+                <button 
+                  onClick={() => setIsModalOpen(false)}
+                  className="absolute top-4 right-4 bg-white/20 p-2 rounded-full text-white z-10"
+                >
+                  <X />
+                </button>
+                <img 
+                  src={product.images[selectedImage].src}
+                  alt={product.images[selectedImage].alt}
+                  className="w-full h-full object-contain rounded-xl"
+                />
+                <div className="absolute bottom-4 left-4 bg-black/50 px-4 py-2 rounded-lg">
+                  <p className="text-white font-semibold">
+                    {product.images[selectedImage].species}
+                  </p>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* NFT Gallery Modal */}
+        <AnimatePresence>
+          {isNFTGalleryOpen && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 p-4"
+            >
+              <motion.div
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.9 }}
+                className="bg-gray-800 rounded-xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              >
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold">My NFT Gallery</h2>
+                  <button 
+                    onClick={() => setIsNFTGalleryOpen(false)}
+                    className="bg-white/20 p-2 rounded-full text-white"
+                  >
+                    <X />
+                  </button>
+                </div>
+
+                {mintedNFTs.length === 0 ? (
+                  <div className="text-center py-12">
+                    <ImageIcon className="mx-auto mb-4 text-gray-500" size={64} />
+                    <p className="text-gray-400">No NFTs minted yet. Start minting!</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {mintedNFTs.map((nft, index) => (
+                      <motion.div
+                        key={index}
+                        whileHover={{ scale: 1.05 }}
+                        className="rounded-lg overflow-hidden shadow-lg"
+                      >
+                        <img 
+                          src={nft.src} 
+                          alt={nft.alt} 
+                          className="w-full aspect-square object-cover"
+                        />
+                        <div className="bg-gray-700 p-2 text-center">
+                          <p className="text-sm font-semibold">{nft.species}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
