@@ -1,5 +1,5 @@
 import { useState, Suspense } from 'react';
-import { Canvas, Euler, ExtendedColors, Layers, Matrix4, NodeProps, NonFunctionKeys, Overwrite, Quaternion, Vector3 } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { 
   motion} from 'framer-motion';
 import { 
@@ -8,7 +8,6 @@ import {
   Stars, 
   useTexture 
 } from '@react-three/drei';
-import * as THREE from 'three';
 import { 
   Wallet, 
   Users, 
@@ -21,7 +20,7 @@ import {
   Compass
 } from 'lucide-react';
 import { Principal } from '@dfinity/principal';
-import { terra_backend } from '../../../declarations/terra_backend';
+import PlugWallet from '../components/button';
 
 // 3D Earth Globe Component
 function EarthGlobe(props) {
@@ -39,7 +38,7 @@ function EarthGlobe(props) {
 const ConservationDashboard = () => {
   // State Management
   const [userProfile, setUserProfile] = useState([]);
-  const [userPrincipal, setUserPrincipal] = useState<string | null>(null);
+  const [userPrincipal, setUserPrincipal] = useState(null);
   const [nftCollection, setNFTCollection] = useState([]);
 
   const [marketplaceStats, setMarketplaceStats] = useState({
@@ -172,7 +171,7 @@ const ConservationDashboard = () => {
             </div>
 
             {/* Wallet Connection */}
-            <Wallet />
+            <PlugWallet />
           </motion.div>
   
           {/* NFT Collection Section - Improved Mobile Responsiveness */}
