@@ -1,9 +1,7 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import { Canvas, Euler, ExtendedColors, Layers, Matrix4, NodeProps, NonFunctionKeys, Overwrite, Quaternion, Vector3 } from '@react-three/fiber';
 import { 
-  motion, 
-  AnimatePresence 
-} from 'framer-motion';
+  motion} from 'framer-motion';
 import { 
   OrbitControls, 
   Environment, 
@@ -12,46 +10,40 @@ import {
 } from '@react-three/drei';
 import * as THREE from 'three';
 import { 
-  Leaf, 
   Wallet, 
-  Shield, 
   Users, 
   Trophy,
-  ArrowUpRight,
   Heart,
   Globe,
   Trees,
-  Medal,
   CreditCard,
-  Activity
+  Star,
+  Compass
 } from 'lucide-react';
+import { Principal } from '@dfinity/principal';
+import { terra_backend } from '../../../declarations/terra_backend';
 import { EventHandlers } from '@react-three/fiber/dist/declarations/src/core/events';
-import { JSX } from 'react/jsx-runtime';
 
 // Type Definitions
-type UserId = string;
 type NFTId = string;
 type Rarity = 'Common' | 'Rare' | 'Epic' | 'Legendary';
 type TransactionType = 'Purchase' | 'Donation' | 'Reward';
 type ProjectType = 'Wildlife' | 'Forest' | 'Ocean' | 'Climate';
 
-// Interfaces
-interface UserProfile {
-  id: UserId;
-  username: string;
-  avatar?: string;
-  adoptions: NFTId[];
-  contributions: number;
-  badges: string[];
-  balance: number;
-  tier: 'Bronze' | 'Silver' | 'Gold' | 'Platinum';
-}
+
+interface Milestone {
+  id: string;
+  description: string;
+  status: string;
+  fundingRequired: number;
+  targetDate: number;
+  completedDate?: number;
+} 
 
 interface NFT {
   id: NFTId;
   name: string;
   imageUrl: string;
-  category: ProjectType;
   rarity: Rarity;
   conservationStatus: string;
   coordinates?: [number, number, number];
@@ -98,70 +90,21 @@ function EarthGlobe(props: JSX.IntrinsicAttributes & Omit<ExtendedColors<Overwri
 }
 
 // Main Dashboard Component
-const ConservationDashboard: React.FC = () => {
+const ConservationDashboard = () => {
   // State Management
-  const [userProfile, setUserProfile] = useState<UserProfile>({
-    id: 'user_001',
-    username: "Global Ecosystem Guardian",
-    avatar: "/images/user.png",
-    adoptions: ['nft_001', 'nft_002'],
-    contributions: 15670,
-    badges: ['Early Adopter', 'Conservation Hero', 'Climate Champion'],
-    balance: 8420,
-    tier: 'Gold'
+  const [userProfile, setUserProfile] = useState([]);
+  const [userPrincipal, setUserPrincipal] = useState<string | null>(null);
+  const [nftCollection, setNFTCollection] = useState([]);
+
+  const [marketplaceStats, setMarketplaceStats] = useState({
+    totalVolume: 250000,
+    totalTransactions: 1245,
+    uniqueOwners: 876,
+    avgPrice: 320
   });
 
-  const [nftCollection, setNFTCollection] = useState<NFT[]>([
-    {
-      id: 'nft_001',
-      name: "Endangered Jaguar Sanctuary",
-      imageUrl: "/images/bg-6.jpg",
-      category: "Wildlife",
-      rarity: "Epic",
-      conservationStatus: "Amazon Rainforest Protection",
-      coordinates: [-3.4653, -62.2159, 0],
-      impactMetrics: {
-        carbonOffset: 5600,
-        speciesProtected: 42,
-        habitatPreserved: 10500
-      }
-    },
-    {
-      id: 'nft_002',
-      name: "Arctic Polar Bear Haven",
-      imageUrl: "/images/bg-6.jpg",
-      category: "Wildlife", 
-      rarity: "Legendary",
-      conservationStatus: "Polar Ice Cap Preservation",
-      coordinates: [74.5, -94.1, 0],
-      impactMetrics: {
-        carbonOffset: 8900,
-        speciesProtected: 28,
-        habitatPreserved: 15200
-      }
-    }
-  ]);
-
-  const [transactions, setTransactions] = useState<Transaction[]>([
-    {
-      id: 'tx_001',
-      from: 'platform',
-      to: userProfile.id,
-      amount: 500,
-      timestamp: Date.now(),
-      transactionType: 'Reward',
-      project: 'Wildlife'
-    },
-    {
-      id: 'tx_002',
-      from: userProfile.id,
-      to: 'conservation_fund',
-      amount: 1000,
-      timestamp: Date.now() - 86400000,
-      transactionType: 'Donation',
-      project: 'Forest'
-    }
-  ]);
+  const [milestones, setMilestones] = useState([]);
+  const [transactions, setTransactions] = useState([]);
 
   const [achievements, setAchievements] = useState<Achievement[]>([
     {
@@ -182,13 +125,36 @@ const ConservationDashboard: React.FC = () => {
     }
   ]);
 
-  // 3D Visualization Render
+  const fetchProfile = async () => {
+    try {
+      const principal = await terra_backend.whoami();
+      const info = blobToPrincipal(principal._arr);
+      setUserPrincipal(info);
+
+      const result = await terra_backend.getUserProfile(principal);
+      setUserProfile([result]);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
+
+  const blobToPrincipal = (blob) => {
+    // Convert array to Uint8Array
+    const uint8Array = new Uint8Array(blob);
+  
+    // Decode as Principal
+    const principal = Principal.fromUint8Array(uint8Array);
+    
+    // Convert Principal to text format
+    return principal.toText();
+  }
+
   const DashboardVisualization = () => (
-    <Canvas>
+    <Canvas camera={{ position: [0, 0, 3],fov: 45 }}>
       <Suspense fallback={null}>
         <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} />
-        <EarthGlobe position={[0, 0, 0]} />
+        <pointLight position={[10, 10, 10]} intensity={1.5} />
+        <EarthGlobe position={[0, 0, 0]}  />
         <Environment preset="sunset" />
         <Stars 
           radius={100} 
@@ -197,149 +163,171 @@ const ConservationDashboard: React.FC = () => {
           factor={4} 
           saturation={0} 
         />
-        <OrbitControls />
+        <OrbitControls
+          enableZoom={true}
+          enablePan={true}
+          autoRotate
+          autoRotateSpeed={0.5}
+        />
       </Suspense>
     </Canvas>
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-green-900 text-white">
-      <div className="grid grid-cols-3 gap-8 p-8">
-        {/* 3D Global Impact Visualization */}
-        <div className="col-span-3 h-[40vh]">
-          <DashboardVisualization />
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 md:px-8 py-10 md:py-20">
+          {/* 3D Global Impact Visualization */}
+          <div className="col-span-3 h-[50vh] rounded-3xl overflow-hidden shadow-2xl border border-green-800/30">
+            <DashboardVisualization />
+          </div>
+  
+          {/* User Profile Section - Improved Mobile Responsiveness */}
+          <motion.div 
+            className="md:col-span-1 bg-gray-800/70 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-green-700/30 shadow-2xl"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex flex-col md:flex-row items-center justify-center md:justify-between mb-6">
+              <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
+                <div className="w-16 md:w-20 h-16 md:h-20 bg-green-700/50 rounded-full flex items-center justify-center">
+                  <Users className="w-8 md:w-10 h-8 md:h-10 text-green-300" />
+                </div>
+                <div className="text-center md:text-left">
+                  <h2 className="text-xl md:text-2xl font-bold text-green-300">
+                    {userPrincipal}
+                  </h2>
+                  <div className="flex items-center justify-center md:justify-start space-x-2">
+                    <Trophy className="text-yellow-400 w-4 h-4 md:w-5 md:h-5" />
+                    <span className="text-xs md:text-sm text-gray-400">
+                      Conservation Profile
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            {/* Enhanced Impact Metrics */}
+            <div className="space-y-4 mt-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-gray-700/50 rounded-xl p-3 md:p-4 text-center">
+                  <Globe className="mx-auto text-green-500 mb-2 w-6 md:w-8 h-6 md:h-8" />
+                  <span className="block text-xs md:text-sm text-gray-400">Total Impact</span>
+                  <span className="font-bold text-green-300 text-sm md:text-base">
+                    --
+                  </span>
+                </div>
+                <div className="bg-gray-700/50 rounded-xl p-3 md:p-4 text-center">
+                  <Trees className="mx-auto text-blue-500 mb-2 w-6 md:w-8 h-6 md:h-8" />
+                  <span className="block text-xs md:text-sm text-gray-400">Conservation Tokens</span>
+                  <span className="font-bold text-blue-300 text-sm md:text-base">
+                    --
+                  </span>
+                </div>
+              </div>
+  
+              {/* Badges Section */}
+              <div className="mt-4">
+                <h3 className="text-base md:text-lg font-semibold text-gray-200 mb-2 flex items-center justify-center md:justify-start">
+                  <Star className="mr-2 text-amber-400 w-4 h-4 md:w-5 md:h-5" /> Achievements
+                </h3>
+                <div className="flex justify-center md:justify-start">
+                  <h2 className="text-sm md:text-lg font-semibold text-gray-200">No badges yet</h2>
+                </div>
+              </div>
+            </div>
 
-        {/* User Profile Section */}
-        <motion.div 
-          className="bg-gray-800/60 backdrop-blur-xl rounded-3xl p-8 border border-green-700/30 shadow-2xl"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center space-x-4">
-              <img 
-                src={userProfile.avatar} 
-                alt={userProfile.username} 
-                className="w-20 h-20 rounded-full border-4 border-green-500"
-              />
-              <div>
-                <h2 className="text-2xl font-bold text-green-300">
-                  {userProfile.username}
+            {/* Wallet Connection */}
+            <Wallet />
+          </motion.div>
+  
+          {/* NFT Collection Section - Improved Mobile Responsiveness */}
+          <motion.div 
+            className="md:col-span-1 bg-gray-800/70 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-purple-700/30 shadow-2xl"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <h3 className="text-xl md:text-2xl font-semibold mb-6 text-purple-300 flex items-center justify-center md:justify-start">
+              <Heart className="mr-3 text-red-400 w-5 md:w-6 h-5 md:h-6" />
+              Conservation NFTs
+            </h3>
+            <div className="space-y-4 text-center md:text-left">
+              <h2 className="text-base md:text-lg font-semibold text-gray-200">
+                No NFTs collected
+              </h2>
+              <div className="grid grid-cols-3 gap-4 opacity-30">
+                {[1,2,3].map((item) => (
+                  <div 
+                    key={item} 
+                    className="aspect-square bg-gray-700 rounded-lg flex items-center justify-center"
+                  >
+                    <Heart className="text-purple-400 w-6 h-6" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+  
+          {/* Milestones and Marketplace Section - Improved Mobile Responsiveness */}
+          <motion.div 
+            className="md:col-span-1 bg-gray-800/70 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-amber-700/30 shadow-2xl"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <div className="mb-6">
+              <h3 className="text-xl md:text-2xl font-semibold text-amber-300 flex items-center justify-center md:justify-start">
+                <Compass className="mr-3 text-amber-400 w-5 md:w-6 h-5 md:h-6" />
+                Active Milestones
+              </h3>
+            </div>
+            <div className="space-y-4">
+              <div className="bg-gray-700/50 rounded-xl p-4 text-center md:text-left">
+                <h2 className="text-sm md:text-base font-semibold text-gray-200 mb-2">
+                  No milestones found
                 </h2>
-                <div className="flex items-center space-x-2">
-                  <Trophy 
-                    className={`
-                      ${userProfile.tier === 'Platinum' ? 'text-white' : 
-                        userProfile.tier === 'Gold' ? 'text-yellow-400' : 
-                        userProfile.tier === 'Silver' ? 'text-gray-300' : 
-                        'text-yellow-700'}
-                    `} 
-                  />
-                  <span className="text-sm text-gray-400">
-                    {userProfile.tier} Tier
+                <div className="grid grid-cols-3 gap-2 opacity-30">
+                  {[1,2,3].map((milestone) => (
+                    <div 
+                      key={milestone} 
+                      className="bg-gray-600 rounded-lg p-2 flex items-center justify-center"
+                    >
+                      <Compass className="text-amber-400 w-4 h-4" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+  
+            {/* Marketplace Statistics */}
+            <div className="mt-6">
+              <h3 className="text-base md:text-xl font-semibold text-gray-200 mb-4 flex items-center justify-center md:justify-start">
+                <CreditCard className="mr-3 text-indigo-400 w-4 md:w-5 h-4 md:h-5" />
+                Marketplace Overview
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-gray-700/50 rounded-xl p-3 md:p-4 text-center">
+                  <span className="block text-xs md:text-sm text-gray-400">Total Volume</span>
+                  <span className="font-bold text-indigo-300 text-sm md:text-base">
+                    ${marketplaceStats.totalVolume.toLocaleString()}
+                  </span>
+                </div>
+                <div className="bg-gray-700/50 rounded-xl p-3 md:p-4 text-center">
+                  <span className="block text-xs md:text-sm text-gray-400">Unique Owners</span>
+                  <span className="font-bold text-purple-300 text-sm md:text-base">
+                    {marketplaceStats.uniqueOwners}
                   </span>
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Impact Metrics */}
-          <div className="space-y-4 mt-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-gray-700/50 rounded-xl p-4 text-center">
-                <Globe className="mx-auto text-green-500 mb-2" />
-                <span className="block text-sm text-gray-400">Total Impact</span>
-                <span className="font-bold text-green-300">
-                  ${userProfile.contributions}
-                </span>
-              </div>
-              <div className="bg-gray-700/50 rounded-xl p-4 text-center">
-                <Trees className="mx-auto text-blue-500 mb-2" />
-                <span className="block text-sm text-gray-400">Conservation Tokens</span>
-                <span className="font-bold text-blue-300">
-                  {userProfile.balance}
-                </span>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* NFT Collection Section */}
-        <motion.div 
-          className="bg-gray-800/60 backdrop-blur-xl rounded-3xl p-8 border border-purple-700/30 shadow-2xl"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <h3 className="text-2xl font-semibold mb-6 text-purple-300 flex items-center">
-            <Heart className="mr-3 text-red-400" />
-            Conservation NFTs
-          </h3>
-          <div className="space-y-4">
-            {nftCollection.map((nft) => (
-              <motion.div 
-                key={nft.id}
-                className="bg-gray-700/50 rounded-xl p-4 flex items-center hover:bg-gray-700/70 transition"
-                whileHover={{ scale: 1.05 }}
-              >
-                <img 
-                  src={nft.imageUrl} 
-                  alt={nft.name} 
-                  className="w-20 h-20 rounded-lg mr-4 object-cover"
-                />
-                <div className="flex-1">
-                  <p className="font-medium text-gray-200">{nft.name}</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-400">{nft.rarity}</span>
-                    <span className="text-sm text-blue-400">
-                      {nft.impactMetrics.carbonOffset} kg CO2
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Achievements Section */}
-        <motion.div 
-          className="bg-gray-800/60 backdrop-blur-xl rounded-3xl p-8 border border-amber-700/30 shadow-2xl"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <h3 className="text-2xl font-semibold mb-6 text-amber-300 flex items-center">
-            <Medal className="mr-3 text-amber-400" />
-            Global Achievements
-          </h3>
-          <div className="space-y-4">
-            {achievements.map((achievement) => (
-              <motion.div 
-                key={achievement.id}
-                className="bg-gray-700/50 rounded-xl p-4 flex items-center"
-                whileHover={{ scale: 1.05 }}
-              >
-                <div className="flex-1">
-                  <p className="font-medium text-gray-200">{achievement.name}</p>
-                  <p className="text-sm text-gray-400">{achievement.description}</p>
-                </div>
-                <Trophy 
-                  className={`
-                    ${achievement.rarity === 'Legendary' ? 'text-yellow-500' : 
-                      achievement.rarity === 'Epic' ? 'text-purple-500' : 
-                      achievement.rarity === 'Rare' ? 'text-blue-500' : 
-                      'text-gray-500'}
-                  `} 
-                />
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
-    </div>
-  );
+    );
 };
-
 export default ConservationDashboard;
+
+function async() {
+  throw new Error('Function not implemented.');
+}

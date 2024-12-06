@@ -13,17 +13,21 @@ import ConservationDashboard from './pages/Dashboard';
 import { AuthProvider, useAuth } from './services/AuthContext';
 import UserOnboardingModal from './components/UserOnBoarding';
 import StepulWhitePaper from './pages/Whitepaper';
-import { createActor } from '../../declarations/terra_backend';
+import { terra_backend } from '../../declarations/terra_backend';
 
-// Define a type for the backend result that matches the actual return type
-type BackendResult = 
-  | { ok: true; data?: any }
-  | { ok: false; error: string };
+// Define type for profile creation result
+type ProfileCreationResult = {
+  success: boolean;
+  error?: string;
+  type?: string;
+  profile?: any;
+};
 
 const AppContent: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { isAuthenticated, principal, userProfile, login } = useAuth();
   const [OnBoardingModal, setOnBoardingModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -36,27 +40,99 @@ const AppContent: React.FC = () => {
     return () => clearTimeout(timer);
   }, [isAuthenticated, userProfile]);
 
-  const handleCreateProfile = async (username: string, acceptedTerms: boolean) => {
+  const handleCreateProfile = async (username: string, acceptedTerms: boolean): Promise<ProfileCreationResult> => {
+    // Input validation
     if (!principal) {
-      console.error("Principal is null or undefined");
-      return;
+      console.error("Authentication error: User is not authenticated.");
+      return {
+        success: false,
+        error: "Authentication required. Please log in again."
+      };
+    }
+
+    if (!username || username.trim().length < 3) {
+      console.error("Invalid username: Must be at least 3 characters long.");
+      return {
+        success: false,
+        error: "Username must be at least 3 characters long."
+      };
+    }
+
+    if (!acceptedTerms) {
+      console.error("Terms not accepted.");
+      return {
+        success: false,
+        error: "You must accept the terms and conditions."
+      };
     }
 
     try {
-      const backend = createActor(principal);
-      console.log("Backend Actor initialized:", backend);
+      // Create the backend actor
+      // const backend = createActor(principal);
 
-      const result = await backend.createUserProfile(username) as unknown as BackendResult;
+      // // Attempt to create user profile
+      // const result = await backend.createUserProfile(username);
 
-      if (result.ok) {
-        // Profile created successfully
+      const principal = await terra_backend.whoami();
+      console.log("Pricipal: ", principal);
+
+      const result = await terra_backend.createUserProfile(username);
+      console.log("Profile creation result:", result);
+
+      // Comprehensive result handling
+      if ('ok' in result) {
+        console.log("Profile created successfully:", result.ok);
         setOnBoardingModal(false);
+        return {
+          success: true,
+          profile: result.ok
+        };
+      } else if ('error' in result) {
+        const errorMessage = result.error || "Profile creation failed";
+        console.error(errorMessage);
+        
+        // Handle specific error types if applicable
+        if (typeof errorMessage === 'string' && errorMessage.includes("Username already exists")) {
+          return {
+            success: false,
+            error: "This username is already taken. Please choose another.",
+            type: "USERNAME_CONFLICT"
+          };
+        }
+
+        return {
+          success: false,
+          error: errorMessage.toString()
+        };
       } else {
-        throw new Error(result.error || 'Profile creation failed');
+        // Unexpected result format
+        console.error("Unexpected response format from createUserProfile");
+        return {
+          success: false,
+          error: "An unexpected error occurred during profile creation."
+        };
       }
     } catch (error) {
-      console.error('Profile creation error:', error);
-      throw error;
+      // Network errors, connection issues, etc.
+      console.error("Profile creation error:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "An unknown error occurred",
+        type: "NETWORK_ERROR"
+      };
+    }
+
+  };  
+  
+  const onSubmitProfile = async (username: string, acceptedTerms: boolean) => {
+    const result = await handleCreateProfile(username, acceptedTerms);
+    
+    if (result.success) {
+      // Optional: handle successful profile creation
+      setErrorMessage(null);
+    } else {
+      // Handle error
+      setErrorMessage(result.error || "Profile creation failed");
     }
   };
 
@@ -87,7 +163,7 @@ const AppContent: React.FC = () => {
         <UserOnboardingModal
           isOpen={true}
           onClose={() => setOnBoardingModal(false)}
-          onSubmit={handleCreateProfile}
+          onSubmit={onSubmitProfile}
         />
       )}
     </>
