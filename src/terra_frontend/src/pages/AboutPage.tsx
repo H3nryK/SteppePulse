@@ -186,8 +186,9 @@ const AboutPage = () => {
   const [contactRef, contactInView] = createInViewHook();
   const [faqRef, faqInView] = createInViewHook();
   
-  const [activeAnimal, setActiveAnimal] = useState(null);
-  const [activeEcosystem, setActiveEcosystem] = useState(null); 
+  const [activeAnimal, setActiveAnimal] = useState<String | null>(null);
+  const [activeEcosystem, setActiveEcosystem] = useState<string | null>(null);
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;

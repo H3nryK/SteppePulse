@@ -15,8 +15,22 @@ import {
 
 import { useAuth } from '../services/AuthContext';
 
+interface WalletConnectionModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+interface NavigationItem {
+  icon: React.ForwardRefExoticComponent<
+    React.SVGProps<SVGSVGElement> & React.RefAttributes<SVGSVGElement>
+  >;
+  label: string;
+  path: string;
+  isAction?: boolean;
+}
+
 // Wallet Connection Modal Component
-const WalletConnectionModal = ({ isOpen, onClose }) => {
+const WalletConnectionModal:  React.FC<WalletConnectionModalProps> = ({ isOpen, onClose }) => {
   const { login } = useAuth();
 
   const walletOptions = [

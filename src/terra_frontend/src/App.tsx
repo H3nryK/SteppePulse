@@ -9,7 +9,7 @@ import MarketplacePage from './pages/MarketPlacePage';
 import AboutPage from './pages/AboutPage';
 import Example from './components/Example';
 import Categories from './pages/Categories';
-import ConservationDashboard from './pages/Dashboard';
+import ConservationDashboard from './pages/Dashboard.tsx';
 import { AuthProvider, useAuth } from './services/AuthContext';
 import UserOnboardingModal from './components/UserOnBoarding';
 import StepulWhitePaper from './pages/Whitepaper';
@@ -72,6 +72,7 @@ const AppContent: React.FC = () => {
 
       // Attempt to create user profile
       const result = await backend.createUserProfile(username);
+      console.log("Profile creation result:", result);
 
       // Comprehensive result handling
       if ('ok' in result) {
@@ -116,7 +117,9 @@ const AppContent: React.FC = () => {
       };
     }
 
-  };  const onSubmitProfile = async (username: string, acceptedTerms: boolean) => {
+  };  
+  
+  const onSubmitProfile = async (username: string, acceptedTerms: boolean) => {
     const result = await handleCreateProfile(username, acceptedTerms);
     
     if (result.success) {
