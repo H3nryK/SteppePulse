@@ -15,24 +15,8 @@ import {
 
 import { useAuth } from '../services/AuthContext';
 
-interface WalletConnectionModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-interface NavigationItem {
-  icon: React.ForwardRefExoticComponent<
-    React.SVGProps<SVGSVGElement> & React.RefAttributes<SVGSVGElement>
-  >;
-  label: string;
-  path: string;
-  isAction?: boolean;
-}
-
-// Wallet Connection Modal Component
-const WalletConnectionModal:  React.FC<WalletConnectionModalProps> = ({ isOpen, onClose }) => {
+const WalletConnectionModal = ({ isOpen, onClose }) => {
   const { login } = useAuth();
-
   const walletOptions = [
     { 
       id: 'nfid', 
@@ -105,7 +89,7 @@ const WalletConnectionModal:  React.FC<WalletConnectionModalProps> = ({ isOpen, 
                   }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
-                    login(wallet.id as 'internet-identity' | 'nfid');
+                    login(wallet.id);
                     onClose();
                   }}
                   className="w-full flex items-center space-x-6 bg-gray-900 p-5 rounded-2xl hover:shadow-lg transition-all border border-transparent hover:border-emerald-500"
@@ -117,7 +101,7 @@ const WalletConnectionModal:  React.FC<WalletConnectionModalProps> = ({ isOpen, 
                     <h3 className="text-white font-semibold text-lg">{wallet.name}</h3>
                     <p className="text-gray-400 text-xs">{wallet.description}</p>
                   </div>
-                  <motion.div
+                  <motion.div 
                     initial={{ opacity: 0, x: -10 }}
                     whileHover={{ opacity: 1, x: 0 }}
                     className="text-emerald-400 opacity-0"
@@ -176,7 +160,7 @@ const Navigation = () => {
     setIsExpanded(false);
   }, [location]);
 
-  const handleNavigation = (path: string, isAction?: boolean) => {
+  const handleNavigation = (path, isAction) => {
     if (isAction) {
       if (path === '#' && isAuthenticated) {
         // Logout action

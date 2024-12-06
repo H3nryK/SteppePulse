@@ -15,19 +15,11 @@ import UserOnboardingModal from './components/UserOnBoarding';
 import StepulWhitePaper from './pages/Whitepaper';
 import { terra_backend } from '../../declarations/terra_backend';
 
-// Define type for profile creation result
-type ProfileCreationResult = {
-  success: boolean;
-  error?: string;
-  type?: string;
-  profile?: any;
-};
-
-const AppContent: React.FC = () => {
+const AppContent = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { isAuthenticated, principal, userProfile, login } = useAuth();
   const [OnBoardingModal, setOnBoardingModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -40,7 +32,7 @@ const AppContent: React.FC = () => {
     return () => clearTimeout(timer);
   }, [isAuthenticated, userProfile]);
 
-  const handleCreateProfile = async (username: string, acceptedTerms: boolean): Promise<ProfileCreationResult> => {
+  const handleCreateProfile = async (username, acceptedTerms) => {
     // Input validation
     if (!principal) {
       console.error("Authentication error: User is not authenticated.");
@@ -67,11 +59,6 @@ const AppContent: React.FC = () => {
     }
 
     try {
-      // Create the backend actor
-      // const backend = createActor(principal);
-
-      // // Attempt to create user profile
-      // const result = await backend.createUserProfile(username);
 
       const principal = await terra_backend.whoami();
       console.log("Pricipal: ", principal);
@@ -124,7 +111,7 @@ const AppContent: React.FC = () => {
 
   };  
   
-  const onSubmitProfile = async (username: string, acceptedTerms: boolean) => {
+  const onSubmitProfile = async (username, acceptedTerms) => {
     const result = await handleCreateProfile(username, acceptedTerms);
     
     if (result.success) {
@@ -170,7 +157,7 @@ const AppContent: React.FC = () => {
   );
 };
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <AuthProvider>
       <AppContent />

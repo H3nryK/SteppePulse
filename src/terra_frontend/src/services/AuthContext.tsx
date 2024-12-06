@@ -77,7 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const options = {
       identityProvider: 
         provider === 'internet-identity' 
-          ? "http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:4943/" 
+          ? "https://identity.ic0.app/#authorize" 
           : "https://nfid.one/authenticate"
     };
 

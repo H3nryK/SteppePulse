@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
 import { Wallet, Unplug } from 'lucide-react';
 
-const wallet = () => {
+const PlugWallet = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
 
   const connectPlugWallet = async () => {
     if (window.ic && window.ic.plug) {
       try {
+
+        if (!window.ic?.plug) {
+            window.open('https://plugwallet.ooo/', '_blank');
+            throw new Error('Plug wallet not intsalled.');
+        }
+        
         // Request connection to Plug Wallet
-        const connected = await window.ic.plug.requestConnection();
+        const connected = await window.ic.plug.requestConnect();
         
         if (connected) {
           // Get the principal/wallet address
-          const principalId = await window.ic.plug.getPrincipal();
+          const principalId = await window.ic.plug.agent.getPrincipal();
           setWalletAddress(principalId.toString());
           setIsConnected(true);
         }
@@ -65,4 +71,4 @@ const wallet = () => {
   );
 };
 
-export default wallet;
+export default PlugWallet;

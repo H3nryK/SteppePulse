@@ -1,5 +1,5 @@
 import { useState, Suspense } from 'react';
-import { Canvas, Euler, ExtendedColors, Layers, Matrix4, NodeProps, NonFunctionKeys, Overwrite, Quaternion, Vector3 } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { 
   motion} from 'framer-motion';
 import { 
@@ -8,7 +8,6 @@ import {
   Stars, 
   useTexture 
 } from '@react-three/drei';
-import * as THREE from 'three';
 import { 
   Wallet, 
   Users, 
@@ -21,64 +20,10 @@ import {
   Compass
 } from 'lucide-react';
 import { Principal } from '@dfinity/principal';
-import { terra_backend } from '../../../declarations/terra_backend';
-import { EventHandlers } from '@react-three/fiber/dist/declarations/src/core/events';
-
-// Type Definitions
-type NFTId = string;
-type Rarity = 'Common' | 'Rare' | 'Epic' | 'Legendary';
-type TransactionType = 'Purchase' | 'Donation' | 'Reward';
-type ProjectType = 'Wildlife' | 'Forest' | 'Ocean' | 'Climate';
-
-
-interface Milestone {
-  id: string;
-  description: string;
-  status: string;
-  fundingRequired: number;
-  targetDate: number;
-  completedDate?: number;
-} 
-
-interface NFT {
-  id: NFTId;
-  name: string;
-  imageUrl: string;
-  rarity: Rarity;
-  conservationStatus: string;
-  coordinates?: [number, number, number];
-  impactMetrics: {
-    carbonOffset: number;
-    speciesProtected: number;
-    habitatPreserved: number;
-  };
-}
-
-interface Transaction {
-  id: string;
-  from: string;
-  to: string;
-  amount: number;
-  nftId?: NFTId;
-  timestamp: number;
-  transactionType: TransactionType;
-  project?: ProjectType;
-}
-
-interface Achievement {
-  id: string;
-  name: string;
-  description: string;
-  criteria: {
-    type: string;
-    threshold: number;
-  };
-  rewardAmount: number;
-  rarity: Rarity;
-}
+import PlugWallet from '../components/button';
 
 // 3D Earth Globe Component
-function EarthGlobe(props: JSX.IntrinsicAttributes & Omit<ExtendedColors<Overwrite<Partial<THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material | THREE.Material[], THREE.Object3DEventMap>>, NodeProps<THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material | THREE.Material[], THREE.Object3DEventMap>, typeof THREE.Mesh>>>, NonFunctionKeys<{ position?: Vector3; up?: Vector3; scale?: Vector3; rotation?: Euler; matrix?: Matrix4; quaternion?: Quaternion; layers?: Layers; dispose?: (() => void) | null; }>> & { position?: Vector3; up?: Vector3; scale?: Vector3; rotation?: Euler; matrix?: Matrix4; quaternion?: Quaternion; layers?: Layers; dispose?: (() => void) | null; } & EventHandlers) {
+function EarthGlobe(props) {
   const texture = useTexture('/images/earth.jpg');
 
   return (
@@ -93,7 +38,7 @@ function EarthGlobe(props: JSX.IntrinsicAttributes & Omit<ExtendedColors<Overwri
 const ConservationDashboard = () => {
   // State Management
   const [userProfile, setUserProfile] = useState([]);
-  const [userPrincipal, setUserPrincipal] = useState<string | null>(null);
+  const [userPrincipal, setUserPrincipal] = useState(null);
   const [nftCollection, setNFTCollection] = useState([]);
 
   const [marketplaceStats, setMarketplaceStats] = useState({
@@ -106,7 +51,7 @@ const ConservationDashboard = () => {
   const [milestones, setMilestones] = useState([]);
   const [transactions, setTransactions] = useState([]);
 
-  const [achievements, setAchievements] = useState<Achievement[]>([
+  const [achievements, setAchievements] = useState([
     {
       id: 'ach_001',
       name: "Wildlife Protector",
@@ -125,18 +70,6 @@ const ConservationDashboard = () => {
     }
   ]);
 
-  const fetchProfile = async () => {
-    try {
-      const principal = await terra_backend.whoami();
-      const info = blobToPrincipal(principal._arr);
-      setUserPrincipal(info);
-
-      const result = await terra_backend.getUserProfile(principal);
-      setUserProfile([result]);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-    }
-  };
 
   const blobToPrincipal = (blob) => {
     // Convert array to Uint8Array
@@ -238,7 +171,7 @@ const ConservationDashboard = () => {
             </div>
 
             {/* Wallet Connection */}
-            <Wallet />
+            <PlugWallet />
           </motion.div>
   
           {/* NFT Collection Section - Improved Mobile Responsiveness */}
@@ -328,6 +261,4 @@ const ConservationDashboard = () => {
 };
 export default ConservationDashboard;
 
-function async() {
-  throw new Error('Function not implemented.');
-}
+
