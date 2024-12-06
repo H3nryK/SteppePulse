@@ -1,9 +1,7 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import { Canvas, Euler, ExtendedColors, Layers, Matrix4, NodeProps, NonFunctionKeys, Overwrite, Quaternion, Vector3 } from '@react-three/fiber';
 import { 
-  motion, 
-  AnimatePresence 
-} from 'framer-motion';
+  motion} from 'framer-motion';
 import { 
   OrbitControls, 
   Environment, 
@@ -12,25 +10,19 @@ import {
 } from '@react-three/drei';
 import * as THREE from 'three';
 import { 
-  Leaf, 
   Wallet, 
-  Shield, 
   Users, 
   Trophy,
-  ArrowUpRight,
   Heart,
   Globe,
   Trees,
-  Medal,
   CreditCard,
-  Activity,
   Star,
   Compass
 } from 'lucide-react';
 import { Principal } from '@dfinity/principal';
 import { terra_backend } from '../../../declarations/terra_backend';
 import { EventHandlers } from '@react-three/fiber/dist/declarations/src/core/events';
-import wallet from '../components/button';
 
 // Type Definitions
 type NFTId = string;
@@ -244,7 +236,7 @@ const ConservationDashboard = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Wallet Connection */}
             <Wallet />
           </motion.div>
