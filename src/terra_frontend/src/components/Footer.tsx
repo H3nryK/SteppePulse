@@ -45,7 +45,7 @@ const Footer: React.FC = () => {
                 href="/whitepaper"
                 className="text-gray-300 hover:text-white text-sm transition-colors"
               >
-                WhitePaper
+                Stepul
               </motion.a>
               <motion.a
                 whileHover={{ y: -2 }}

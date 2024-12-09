@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
   PieChart, Pie, Cell, ResponsiveContainer 
 } from 'recharts';
 import { 
-  Leaf, Shield, Globe, Zap, Lock, Users, TrendingUp, 
+  Globe, Zap, Lock, TrendingUp, 
   MapPin, PawPrint, TreeDeciduous, Bird, Waves, BookOpen, Feather 
 } from 'lucide-react';
+import { FaInfinity, FaChargingStation } from "react-icons/fa";
+import { GiTeamIdea } from "react-icons/gi";
 
 // Wildlife Impact Data with Progress Tracking
 const wildlifeImpactData = [
@@ -19,29 +21,50 @@ const wildlifeImpactData = [
 // Enhanced Tokenomics Data
 const tokenomicsData = [
   { 
-    name: 'Wildlife Conservation', 
-    value: 40, 
+    name: 'ICP Hub Kenya', 
+    value: 7, 
+    color: '#2E6780', 
+    icon: FaInfinity,
+    description: 'Direct funding for conservation projects'
+  },
+  { 
+    name: 'Liquidity', 
+    value: 50, 
     color: '#2ECC71', 
     icon: PawPrint,
     description: 'Direct funding for conservation projects'
   },
   { 
     name: 'Ecosystem Development', 
-    value: 30, 
+    value: 5, 
     color: '#3498DB', 
     icon: TreeDeciduous,
     description: 'Blockchain infrastructure and technology'
   },
   { 
-    name: 'Research & Innovation', 
-    value: 20, 
+    name: 'Team', 
+    value: 7, 
+    color: '#eff542', 
+    icon: GiTeamIdea,
+    description: 'Scientific research and tracking technologies'
+  },
+  { 
+    name: 'Marketing', 
+    value: 9, 
+    color: '#f5425a ', 
+    icon: FaChargingStation,
+    description: 'Scientific research and tracking technologies'
+  },
+  { 
+    name: 'Wildlife Kitty', 
+    value: 5, 
     color: '#F39C12', 
     icon: Bird,
     description: 'Scientific research and tracking technologies'
   },
   { 
     name: 'Community Engagement', 
-    value: 10, 
+    value: 17, 
     color: '#9B59B6', 
     icon: Waves,
     description: 'Education and global awareness'
@@ -131,7 +154,7 @@ const StepulWhitepaper = () => {
         {/* Pie Chart Visualization */}
         <div className="bg-gray-700 p-4 rounded-lg">
           <h3 className="text-xl font-semibold text-white mb-4">Token Allocation</h3>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={500}>
             <PieChart>
               <Pie
                 data={tokenomicsData}
