@@ -230,7 +230,7 @@ actor TerraPulse {
                     balance = 0;
                 };
                 users.put(msg.caller, profile);
-                #ok()
+                return #ok(());
             };
         }
     };
@@ -239,6 +239,7 @@ actor TerraPulse {
     public query func getUserProfile(caller : Principal) : async ?UserProfile {
         users.get(caller)
     };
+    
     // Add a function to check username availability
     public query func isUsernameAvailable(username: Text) : async Bool {
         // Check if username is valid length

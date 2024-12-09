@@ -47,6 +47,7 @@ const AppContent = () => {
   
     try {
       const result = await terra_backend.createUserProfile(username);
+      
       if ('ok' in result) {
         console.log("Profile created:", result.ok);
         return { success: true, profile: result.ok };
