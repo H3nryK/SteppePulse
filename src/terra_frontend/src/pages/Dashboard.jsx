@@ -77,6 +77,9 @@ const ConservationDashboard = () => {
       const info = await terra_backend.whoami();
       const principal = blobToPrincipal(info._arr);
       setPrincipal(principal);
+
+      const profile = await terra_backend.get_profile(principal);
+      setUserProfile(profile);
     } catch (error) {
       console.error("Error fetching profile:", error);
     } finally {
@@ -145,7 +148,7 @@ const ConservationDashboard = () => {
                 </div>
                 <div className="text-center md:text-left">
                   <h2 className="text-xl md:text-2xl font-bold text-green-300">
-                    {principal}
+                    {userProfile.username}
                   </h2>
                   <div className="flex items-center justify-center md:justify-start space-x-2">
                     <Trophy className="text-yellow-400 w-4 h-4 md:w-5 md:h-5" />
