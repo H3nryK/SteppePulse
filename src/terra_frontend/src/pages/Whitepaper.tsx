@@ -246,7 +246,7 @@ const StepulWhitepaper = () => {
   );
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen p-4 md:p-10">
+    <div className="bg-gray-900 text-white min-h-screen px-8 py-20 md:p-10">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <header className="text-center mb-12">

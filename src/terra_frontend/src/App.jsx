@@ -33,83 +33,39 @@ const AppContent = () => {
   }, [isAuthenticated, userProfile]);
 
   const handleCreateProfile = async (username, acceptedTerms) => {
-    // Input validation
     if (!principal) {
-      console.error("Authentication error: User is not authenticated.");
-      return {
-        success: false,
-        error: "Authentication required. Please log in again."
-      };
+      return { success: false, error: "Authentication required. Please log in." };
     }
-
+  
     if (!username || username.trim().length < 3) {
-      console.error("Invalid username: Must be at least 3 characters long.");
-      return {
-        success: false,
-        error: "Username must be at least 3 characters long."
-      };
+      return { success: false, error: "Username must be at least 3 characters long." };
     }
-
+  
     if (!acceptedTerms) {
-      console.error("Terms not accepted.");
-      return {
-        success: false,
-        error: "You must accept the terms and conditions."
-      };
+      return { success: false, error: "Please accept the terms and conditions." };
     }
-
+  
     try {
-
-      const principal = await terra_backend.whoami();
-      console.log("Pricipal: ", principal);
-
       const result = await terra_backend.createUserProfile(username);
-      console.log("Profile creation result:", result);
-
-      // Comprehensive result handling
       if ('ok' in result) {
-        console.log("Profile created successfully:", result.ok);
-        setOnBoardingModal(false);
-        return {
-          success: true,
-          profile: result.ok
-        };
-      } else if ('error' in result) {
-        const errorMessage = result.error || "Profile creation failed";
-        console.error(errorMessage);
-        
-        // Handle specific error types if applicable
-        if (typeof errorMessage === 'string' && errorMessage.includes("Username already exists")) {
-          return {
-            success: false,
-            error: "This username is already taken. Please choose another.",
-            type: "USERNAME_CONFLICT"
-          };
+        console.log("Profile created:", result.ok);
+        return { success: true, profile: result.ok };
+      }
+      if ('err' in result) {
+        switch (result.err) {
+          case "#InvalidInput":
+            return { success: false, error: "Invalid username. Ensure it is between 3 and 20 characters." };
+          case "#AlreadyExists":
+            return { success: false, error: "Username already exists. Please choose another." };
+          default:
+            return { success: false, error: "An unknown error occurred." };
         }
-
-        return {
-          success: false,
-          error: errorMessage.toString()
-        };
-      } else {
-        // Unexpected result format
-        console.error("Unexpected response format from createUserProfile");
-        return {
-          success: false,
-          error: "An unexpected error occurred during profile creation."
-        };
       }
     } catch (error) {
-      // Network errors, connection issues, etc.
-      console.error("Profile creation error:", error);
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : "An unknown error occurred",
-        type: "NETWORK_ERROR"
-      };
+      console.error("Error creating profile:", error);
+      return { success: false, error: "Network error. Please try again later." };
     }
-
-  };  
+  };   
   
   const onSubmitProfile = async (username, acceptedTerms) => {
     const result = await handleCreateProfile(username, acceptedTerms);

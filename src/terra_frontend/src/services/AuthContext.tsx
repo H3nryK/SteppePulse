@@ -46,30 +46,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const principalId = identity.getPrincipal().toString();
         setPrincipal(principalId);
         setIsAuthenticated(true);
-        
-        // Try to fetch user profile
-        await fetchUserProfile(principalId);
       }
     };
 
     initAuthClient();
   }, []);
-
-  const fetchUserProfile = async (principalId: string) => {
-    try {
-      const backend = createActor(principalId);
-      console.log("Backend: ", backend);
-
-      const profile = await backend.getUserProfile(Principal.fromText(principalId));
-      console.log("Profile: ", profile);
-      
-      if (profile) {
-        setUserProfile(profile as UserProfile);
-      }
-    } catch (error) {
-      console.error('Failed to fetch user profile:', error);
-    }
-  };
 
   const login = async (provider: 'internet-identity' | 'nfid') => {
     if (!authClient) return;
