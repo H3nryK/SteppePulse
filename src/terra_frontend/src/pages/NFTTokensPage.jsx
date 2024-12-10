@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Share2, Info, Plus, X, Image as ImageIcon } from 'lucide-react';
+import { Heart, Share2, Info, Plus, X, Image as ImageIcon, DollarSign, PawPrint } from 'lucide-react';
 
 const WildlifeNFTCollection = () => {
   const [selectedImage, setSelectedImage] = useState(0);
@@ -289,7 +289,7 @@ const WildlifeNFTCollection = () => {
                     whileTap={{ scale: 0.95 }}
                     className="bg-green-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-700 transition flex items-center justify-center"
                   >
-                    <Paw className="mr-2" /> Adopt Animal
+                    <PawPrint className="mr-2" /> Adopt Animal
                   </motion.button>
                 </div>
               </div>
@@ -322,56 +322,6 @@ const WildlifeNFTCollection = () => {
                   <X />
                 </button>
               </div>
-
-              {/* Minting Form */}
-              <form onSubmit={handleMintSubmit} className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-gray-300 mb-2">Full Name</label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={mintFormData.name}
-                      onChange={handleMintFormChange}
-                      required
-                      className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="Enter your full name"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-300 mb-2">Email Address</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={mintFormData.email}
-                      onChange={handleMintFormChange}
-                      required
-                      className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="Enter your email"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-gray-300 mb-2">Wallet Address</label>
-                  <input
-                    type="text"
-                    name="walletAddress"
-                    value={mintFormData.walletAddress}
-                    onChange={handleMintFormChange}
-                    required
-                    className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Enter your crypto wallet address"
-                  />
-                </div>
-                <motion.button
-                  type="submit"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full bg-green-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-700 transition flex items-center justify-center"
-                >
-                  <Plus className="mr-2" /> Mint NFT
-                </motion.button>
-              </form>
 
               {/* Minted NFTs Display */}
               {mintedNFTs.length > 0 && (

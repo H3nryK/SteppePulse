@@ -29,7 +29,7 @@ const socialLinks = [
   },
   {
     name: 'Telegram',
-    url: 'https://t.me/+dCItpVFGdC81ZTVk',
+    url: 'https://t.me/steppepulse',
     icon: FaTelegram,
   }
 ];

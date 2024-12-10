@@ -1,4 +1,4 @@
-import { useState, Suspense } from 'react';
+import { useState, Suspense, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { 
   motion} from 'framer-motion';
@@ -9,7 +9,6 @@ import {
   useTexture 
 } from '@react-three/drei';
 import { 
-  Wallet, 
   Users, 
   Trophy,
   Heart,
@@ -21,6 +20,7 @@ import {
 } from 'lucide-react';
 import { Principal } from '@dfinity/principal';
 import PlugWallet from '../components/button';
+import { terra_backend } from '../../../declarations/terra_backend';
 
 // 3D Earth Globe Component
 function EarthGlobe(props) {
@@ -37,8 +37,9 @@ function EarthGlobe(props) {
 // Main Dashboard Component
 const ConservationDashboard = () => {
   // State Management
+  const [isLoading, setIsLoading] = useState(false);
   const [userProfile, setUserProfile] = useState([]);
-  const [userPrincipal, setUserPrincipal] = useState(null);
+  const [principal, setPrincipal] = useState(null);
   const [nftCollection, setNFTCollection] = useState([]);
 
   const [marketplaceStats, setMarketplaceStats] = useState({
@@ -70,6 +71,21 @@ const ConservationDashboard = () => {
     }
   ]);
 
+  const fetchProfile = async () => {
+    setIsLoading(true);
+    try {
+      const info = await terra_backend.whoami();
+      const principal = blobToPrincipal(info._arr);
+      setPrincipal(principal);
+
+      const profile = await terra_backend.get_profile(principal);
+      setUserProfile(profile);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const blobToPrincipal = (blob) => {
     // Convert array to Uint8Array
@@ -80,7 +96,11 @@ const ConservationDashboard = () => {
     
     // Convert Principal to text format
     return principal.toText();
-  }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
 
   const DashboardVisualization = () => (
     <Canvas camera={{ position: [0, 0, 3],fov: 45 }}>
@@ -128,7 +148,7 @@ const ConservationDashboard = () => {
                 </div>
                 <div className="text-center md:text-left">
                   <h2 className="text-xl md:text-2xl font-bold text-green-300">
-                    {userPrincipal}
+                    {userProfile.username}
                   </h2>
                   <div className="flex items-center justify-center md:justify-start space-x-2">
                     <Trophy className="text-yellow-400 w-4 h-4 md:w-5 md:h-5" />

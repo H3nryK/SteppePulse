@@ -1,47 +1,70 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
   PieChart, Pie, Cell, ResponsiveContainer 
 } from 'recharts';
 import { 
-  Leaf, Shield, Globe, Zap, Lock, Users, TrendingUp, 
+  Globe, Zap, Lock, TrendingUp, 
   MapPin, PawPrint, TreeDeciduous, Bird, Waves, BookOpen, Feather 
 } from 'lucide-react';
+import { FaInfinity, FaChargingStation } from "react-icons/fa";
+import { GiTeamIdea } from "react-icons/gi";
 
 // Wildlife Impact Data with Progress Tracking
 const wildlifeImpactData = [
-  { species: 'Elephant', progress: 35, description: 'Habitat Protection', goal: 'Preserve 50,000 acres', raised: '$1.2M' },
-  { species: 'Tiger', progress: 45, description: 'Anti-Poaching Initiatives', goal: 'Reduce poaching by 60%', raised: '$850K' },
-  { species: 'Coral Reef', progress: 25, description: 'Marine Ecosystem Restoration', goal: 'Restore 100 sq km', raised: '$650K' },
-  { species: 'Rainforest', progress: 55, description: 'Carbon Offset Programs', goal: 'Plant 1M trees', raised: '$1.5M' }
+  { species: 'Black rhino', progress: 55, description: 'Poaching, habitat loss, and climate change are the main threats to this species.'},
+  { species: 'Javan rhino', progress: 30, description: 'Poaching and the illegal trade of their parts, especially their horn'},
+  { species: 'Eastern gorilla', progress: 25, description: 'Marine Ecosystem Restoration'},
+  { species: 'Tana River mangabey', progress: 45, description: "considered one of the world's 25 most threatened primates."}
 ];
 
 // Enhanced Tokenomics Data
 const tokenomicsData = [
   { 
-    name: 'Wildlife Conservation', 
-    value: 40, 
+    name: 'ICP Hub Kenya', 
+    value: 7, 
+    color: '#2E6780', 
+    icon: FaInfinity,
+    description: 'Direct funding for conservation projects'
+  },
+  { 
+    name: 'Liquidity', 
+    value: 50, 
     color: '#2ECC71', 
     icon: PawPrint,
     description: 'Direct funding for conservation projects'
   },
   { 
     name: 'Ecosystem Development', 
-    value: 30, 
+    value: 5, 
     color: '#3498DB', 
     icon: TreeDeciduous,
     description: 'Blockchain infrastructure and technology'
   },
   { 
-    name: 'Research & Innovation', 
-    value: 20, 
+    name: 'Team', 
+    value: 7, 
+    color: '#eff542', 
+    icon: GiTeamIdea,
+    description: 'Scientific research and tracking technologies'
+  },
+  { 
+    name: 'Marketing', 
+    value: 9, 
+    color: '#f5425a ', 
+    icon: FaChargingStation,
+    description: 'Scientific research and tracking technologies'
+  },
+  { 
+    name: 'Wildlife Kitty', 
+    value: 5, 
     color: '#F39C12', 
     icon: Bird,
     description: 'Scientific research and tracking technologies'
   },
   { 
     name: 'Community Engagement', 
-    value: 10, 
+    value: 17, 
     color: '#9B59B6', 
     icon: Waves,
     description: 'Education and global awareness'
@@ -55,13 +78,15 @@ const roadmapData = [
     milestones: [
       'Platform Development Launch',
       'Initial Blockchain Integration',
+      'NFT & Stepul marketplace launch',
       'First Conservation Partnership Signed'
     ],
     status: 'upcoming'
   },
   {
-    quarter: 'Q3 2025',
+    quarter: 'Q2 2025',
     milestones: [
+      'AI & IOT - powered Conservation Monitoring',
       'Global Conservation Network Expansion',
       'Advanced Tracking Technology Rollout',
       'Community Engagement Program Launch'
@@ -69,9 +94,8 @@ const roadmapData = [
     status: 'upcoming'
   },
   {
-    quarter: 'Q1 2026',
+    quarter: 'Q3 2025',
     milestones: [
-      'AI-Powered Conservation Monitoring',
       'International Research Collaborations',
       'Sustainable Development Initiatives'
     ],
@@ -130,7 +154,7 @@ const StepulWhitepaper = () => {
         {/* Pie Chart Visualization */}
         <div className="bg-gray-700 p-4 rounded-lg">
           <h3 className="text-xl font-semibold text-white mb-4">Token Allocation</h3>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={500}>
             <PieChart>
               <Pie
                 data={tokenomicsData}
@@ -192,12 +216,12 @@ const StepulWhitepaper = () => {
     <section ref={sectionRefs.impact} className="bg-gray-800 p-6 rounded-lg">
       <h2 className="text-3xl font-bold mb-6 text-green-400 flex items-center">
         <Feather className="mr-3 text-green-500" />
-        Wildlife Impact Tracker
+        Wildlife Impact Projection
       </h2>
       <div className="grid md:grid-cols-2 gap-6">
         {/* Bar Chart Visualization */}
         <div className="bg-gray-700 p-4 rounded-lg">
-          <h3 className="text-xl font-semibold text-white mb-4">Conservation Progress</h3>
+          <h3 className="text-xl font-semibold text-white mb-4">Conservation Projection on Impact</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={wildlifeImpactData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#444" />
@@ -235,8 +259,7 @@ const StepulWhitepaper = () => {
                 />
               </div>
               <div className="flex justify-between text-gray-300 text-sm">
-                <span>{project.description}</span>
-                <span>Raised: {project.raised}</span>
+                <span>{project.description}</span>  
               </div>
             </div>
           ))}
@@ -246,15 +269,15 @@ const StepulWhitepaper = () => {
   );
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen p-4 md:p-10">
-      <div className="max-w-6xl mx-auto">
+    <div className="bg-gray-900 text-white min-h-screen px-8 md:p-10">
+      <div className="max-w-6xl mx-auto py-10 ">
         {/* Header */}
         <header className="text-center mb-12">
           <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
             Stepul
           </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Blockchain-Powered Wildlife Conservation
+            Official SteppePulse Token
           </p>
         </header>
 
@@ -323,18 +346,6 @@ const StepulWhitepaper = () => {
           {activeSection === 'impact' && <WildlifeImpactSection />}
           {activeSection === 'roadmap' && <RoadmapSection />}
         </div>
-
-        {/* Footer */}
-        <footer className="mt-12 text-center">
-          <div className="flex justify-center space-x-4 mb-6">
-            <PawPrint className="text-green-400 animate-bounce" size={32} />
-            <TreeDeciduous className="text-blue-400 animate-pulse" size={32} />
-            <Bird className="text-yellow-400 animate-spin" size={32} />
-          </div>
-          <p className="text-gray-400">
-            © 2024 Stepul. Empowering Conservation Through Blockchain.
-          </p>
-        </footer>
       </div>
     </div>
   );

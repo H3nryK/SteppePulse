@@ -83,7 +83,7 @@ const AboutPage = () => {
     { 
       icon: FaTelegram, 
       name: 'Telegram', 
-      url: 'https://t.me/+dCItpVFGdC81ZTVk',
+      url: 'https://t.me/steppepulse',
       color: 'text-blue-400',
       animal: Bird,
       description: 'Swift communication like a soaring eagle'
